@@ -482,3 +482,9 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+API/reactivities.db-shm
+API/reactivities.db-wal
+API/reactivities.db
+Client/package-lock.json
+API/reactivities.db
+API/API.csproj
