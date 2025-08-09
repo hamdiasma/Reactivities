@@ -1,7 +1,7 @@
 using System;
 using Application.Activities.Queries;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+using Application.Core;
+
 
 namespace API.Extensions
 {
@@ -41,10 +41,11 @@ namespace API.Extensions
                 })
             );
             
-            services.AddMediatR(x=>x.RegisterServicesFromAssemblyContaining<GetActivitiesList.Query>());
+            services.AddMediatR(x=>x.RegisterServicesFromAssemblyContaining<GetActivitiesList.Handler>());
             // services.AddMediatR(x=>x.RegisterServicesFromAssemblyContaining<GetActivityDetails.Query>());
-         
 
+            // automapper
+            services.AddAutoMapper(typeof(MappingProfiles).Assembly);
             // -------------------------
             // 📌 TODO : Autres services personnalisés
             // -------------------------
