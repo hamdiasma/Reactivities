@@ -1,4 +1,5 @@
 using System;
+using Application.Activities.Queries;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -39,6 +40,10 @@ namespace API.Extensions
                         .AllowAnyMethod(); // Autorise toutes les méthodes HTTP (sécurité plus faible si activée)
                 })
             );
+            
+            services.AddMediatR(x=>x.RegisterServicesFromAssemblyContaining<GetActivitiesList.Query>());
+            // services.AddMediatR(x=>x.RegisterServicesFromAssemblyContaining<GetActivityDetails.Query>());
+         
 
             // -------------------------
             // 📌 TODO : Autres services personnalisés
