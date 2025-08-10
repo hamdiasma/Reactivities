@@ -1,29 +1,36 @@
 import { Box, Button, Paper, TextField, Typography } from "@mui/material"
 import type { IActivity } from "../../../lib/types";
+import { useActivities } from "../../../lib/hooks/useActivities";
 
 interface IProps {
     selectedActivity?: IActivity
     handelEditCancel: () => void;
-    handleSubmitForm: (activity: IActivity) => void;
 }
 
-export const ActivityForm = ({ selectedActivity, handelEditCancel, handleSubmitForm }: IProps) => {
+export const ActivityForm = ({ selectedActivity, handelEditCancel }: IProps) => {
 
-    const handelSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const { updateActvity, createActvity } = useActivities()
+
+    const handelSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         // Handle form submission logic here
-     const formData = new FormData(event.currentTarget);
+        const formData = new FormData(event.currentTarget);
         //  formData.get('title') as string; // Example of accessing form data
-       const data: Record<string, string> = {};
+        const data: Record<string, string> = {};
         formData.forEach((value, key) => {
-            console.log(`Key: ${key}, Value: ${value}`);
             data[key] = value.toString();
         });
-        
-        if(selectedActivity) data.id = selectedActivity.id;
-        handleSubmitForm(data as unknown as IActivity);
+
+        if (selectedActivity) {
+            data.id = selectedActivity.id
+            await updateActvity.mutateAsync(data as unknown as IActivity);
+            handelEditCancel();
+        } else {
+            await createActvity.mutateAsync(data as unknown as IActivity);
+            handelEditCancel();
+        }
     }
-    
+
     return (
         <Paper sx={{ padding: 2, borderRadius: 3, marginBottom: 2 }}>
             <Typography variant="h5" color="primary" align="center" gutterBottom>
@@ -36,7 +43,7 @@ export const ActivityForm = ({ selectedActivity, handelEditCancel, handleSubmitF
                     label="Activity Title"
                     variant="outlined"
                     name="title"
-                    required    
+                    required
                     fullWidth
                     defaultValue={selectedActivity?.title} // Assuming activity is passed as a prop
                     InputLabelProps={{ shrink: true }}
@@ -46,9 +53,12 @@ export const ActivityForm = ({ selectedActivity, handelEditCancel, handleSubmitF
                     type="date"
                     name="date"
                     variant="outlined"
-                    required    
+                    required
                     fullWidth
-                    defaultValue={selectedActivity?.date && new Date(selectedActivity.date).toISOString().split('T')[0]}
+                    defaultValue={selectedActivity?.date ?
+                        new Date(selectedActivity.date).toISOString().split('T')[0]
+                        : new Date().toISOString().split('T')[0]
+                    }
                     InputLabelProps={{ shrink: true }}
                 />
                 <TextField
@@ -57,7 +67,7 @@ export const ActivityForm = ({ selectedActivity, handelEditCancel, handleSubmitF
                     name="description"
                     fullWidth
                     multiline
-                    required    
+                    required
                     rows={4}
                     defaultValue={selectedActivity?.description}
                     InputLabelProps={{ shrink: true }}
@@ -66,7 +76,7 @@ export const ActivityForm = ({ selectedActivity, handelEditCancel, handleSubmitF
                     label="Category"
                     variant="outlined"
                     name="category"
-                    required    
+                    required
                     fullWidth
                     defaultValue={selectedActivity?.category}
                     InputLabelProps={{ shrink: true }}
@@ -76,13 +86,15 @@ export const ActivityForm = ({ selectedActivity, handelEditCancel, handleSubmitF
                     variant="outlined"
                     fullWidth
                     name="city"
-                    required    
+                    required
                     defaultValue={selectedActivity?.city}
                     InputLabelProps={{ shrink: true }}
                 />
                 <TextField
                     label="Venue"
                     variant="outlined"
+                    name="venue"
+                    required
                     fullWidth
                     defaultValue={selectedActivity?.venue}
                     InputLabelProps={{ shrink: true }}
@@ -90,7 +102,12 @@ export const ActivityForm = ({ selectedActivity, handelEditCancel, handleSubmitF
                 />
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2, gap: 2 }}>
                     <Button color="inherit" onClick={handelEditCancel}>Cancel</Button>
-                    <Button type="submit" variant="contained" color="success">Submit</Button>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="success"
+                        disabled={updateActvity.isPending || createActvity.isPending}
+                    >Submit</Button>
                 </Box>
             </Box>
         </Paper>

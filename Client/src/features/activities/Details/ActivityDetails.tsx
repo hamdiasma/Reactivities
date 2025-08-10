@@ -1,20 +1,24 @@
 import { Button, Card, CardActions, CardContent, CardMedia, Typography } from "@mui/material";
 import type { IActivity } from "../../../lib/types";
 import { formatDate } from "../../../helpers/DateFormatter";
+import { useActivities } from "../../../lib/hooks/useActivities";
 
 interface IProps {
-    activity: IActivity;
+    selectedActivity:IActivity;
     handelCancelSelect?: () => void;
     handleEditMode?: (id?: string) => void;
 }
 
-function ActivityDetails({ activity,handelCancelSelect,handleEditMode }: IProps) {
+function ActivityDetails({ selectedActivity,handelCancelSelect,handleEditMode }: IProps) {
+    const {activities} = useActivities();
+    const  activity = activities?.find(a => a.id === selectedActivity.id);
+    if (!activity) return;
+
     return (
         <Card sx={{ borderRadius: 3, marginBottom: 2 }}>
             <CardMedia component='img'
                 src={`/images/categoryImages/${activity.category}.jpg`}
             />
-
             <CardContent >
                 <Typography variant="h5">{activity.title}</Typography>
                 <Typography variant="subtitle1" fontWeight='light'>{formatDate(activity.date)}</Typography>

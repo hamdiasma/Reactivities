@@ -5,15 +5,13 @@ import ActivityCard from "./ActivityCard";
 interface IProps {
     activities: IActivity[];
     handleActivitySelect?: (id: string) => void;
-    handleDeleteActivity?: (id: string) => void;
 }
 
-function ActivityList({ activities,handleActivitySelect,handleDeleteActivity }: IProps) {
+function ActivityList({ activities,handleActivitySelect }: IProps) {
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
             {activities.map((activity, index) => (
                 <ActivityCard key={activity.id + index} activity={activity} 
-                handleDeleteActivity={handleDeleteActivity}
                 handleActivitySelect={handleActivitySelect} />))
             }
         </Box>

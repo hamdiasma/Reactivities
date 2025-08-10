@@ -16,7 +16,7 @@ public class GetActivitiesList
         public async Task<List<Activity>> Handle(Query request, CancellationToken cancellationToken)
         {
            logger.LogInformation($"Processing activity list request at {DateTime.UtcNow}");
-            return await dbContext.Activities.ToListAsync(cancellationToken);
+            return await dbContext.Activities.OrderByDescending(x=>x.Date).ToListAsync(cancellationToken);
         }
     }
 }
