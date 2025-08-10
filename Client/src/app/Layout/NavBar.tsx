@@ -17,6 +17,10 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import { Button, Container, CssBaseline } from '@mui/material';
 
+interface IProps {
+    handleEditMode: () => void;
+}
+
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
@@ -24,12 +28,15 @@ const Search = styled('div')(({ theme }) => ({
     '&:hover': {
         backgroundColor: alpha(theme.palette.common.white, 0.25),
     },
-    marginRight: theme.spacing(2),
+    marginRight: theme.spacing(0),
     marginLeft: 0,
-    width: '100%',
+    diplay: 'flex',
+    flexGrow: 1,
     [theme.breakpoints.up('sm')]: {
         marginLeft: theme.spacing(3),
-        width: 'auto',
+        marginRight: theme.spacing(2),
+        diplay: 'flex',
+        flexGrow: 100,
     },
 }));
 
@@ -57,7 +64,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
 }));
 
-export default function NavBar() {
+export default function NavBar({ handleEditMode }: IProps) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);
@@ -166,7 +173,7 @@ export default function NavBar() {
             <CssBaseline />
             <Box sx={{ flexGrow: 1 }}>
                 <AppBar position="fixed">
-                    <Container maxWidth="lg">
+                    <Container maxWidth='lg'>
                         <Toolbar>
                             <IconButton
                                 size="large"
@@ -207,37 +214,14 @@ export default function NavBar() {
                                             </MenuItem>)
                                         )}
                                 </Box>
-                                {/* <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={4} color="error">
-                <MailIcon />
-              </Badge>
-            </IconButton> */}
-                                {/* <IconButton
-              size="large"
-              aria-label="show 17 new notifications"
-              color="inherit"
-            >
-              <Badge badgeContent={17} color="error">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton> */}
-                                {/* <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton> */}
                             </Box>
                             <Box sx={{ display: { xs: 'none', md: 'block' } }}>
                                 <Button size='large' variant="contained" color="warning"
                                     sx={{ marginLeft: 2 }}
                                 >
-                                    <Typography variant="button" sx={{ textTransform: 'none', color: 'white' }}>
+                                    <Typography
+                                        onClick={handleEditMode}
+                                        variant="button" sx={{ textTransform: 'none', color: 'white' }}>
                                         New
                                     </Typography>
                                 </Button>
