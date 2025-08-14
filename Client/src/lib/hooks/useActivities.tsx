@@ -7,16 +7,24 @@ import agent from "../api/agent";
 // mutation function to update activities
 // mutation function to delete activities
 // mutation function to create activities
-export const useActivities = () => {
-
+export const useActivities = (id?:string) => {
     const queryClient = useQueryClient();
-
     const { data: activities, isPending } = useQuery({
         queryKey: ['activities'],
         queryFn: async () => {
             const response = await agent.get<IActivity[]>("/activities");
             return response.data;
         },
+        
+    })
+
+     const { data: activity, isLoading:isLoadinActivity } = useQuery({
+        queryKey: ['activities', id],
+        queryFn: async () => {
+            const response = await agent.get<IActivity>(`/activities/${id}`);
+            return response.data;
+        },
+        enabled: !!id, // only run this query if id is defined
     })
 
      const  updateActvity =  useMutation({
@@ -32,7 +40,7 @@ export const useActivities = () => {
         mutationFn: async (activity: IActivity) =>{
             await agent.post<IActivity>(`/activities`, activity);
         },
-        onSuccess:async () => {
+        onSuccess: async () => {
             queryClient.invalidateQueries({ queryKey: ['activities'] });
         }
      })
@@ -44,5 +52,5 @@ export const useActivities = () => {
             queryClient.invalidateQueries({ queryKey: ['activities'] });
         }
      })
-    return { activities, isPending, updateActvity, createActvity , deleteActvity };
+    return { activities, isPending, updateActvity, createActvity , deleteActvity,activity, isLoadinActivity };
 }

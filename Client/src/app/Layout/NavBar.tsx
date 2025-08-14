@@ -15,11 +15,10 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import { Button, Container, CssBaseline } from '@mui/material';
+import {  Container, CssBaseline } from '@mui/material';
+import { NavLink } from 'react-router';
+import MenueItemLink from '../Shared/Components/MenueItemLink';
 
-interface IProps {
-    handleEditMode: () => void;
-}
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -31,14 +30,13 @@ const Search = styled('div')(({ theme }) => ({
     marginRight: theme.spacing(0),
     marginLeft: 0,
     diplay: 'flex',
-    width: '100%',
     flexGrow: 1,
     [theme.breakpoints.up('sm')]: {
         marginLeft: theme.spacing(3),
         marginRight: theme.spacing(2),
         diplay: 'flex',
         flexGrow: 100,
-        width: '100%',
+      
     },
 }));
 
@@ -68,15 +66,13 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
 }));
 
-export default function NavBar({ handleEditMode }: IProps) {
+export default function NavBar() {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);
     const menueList = [
         { label: 'Home', link: '/' },
         { label: 'Activities', link: '/activities' },
-        // { label: 'About', link: '/about' },
-        { label: 'Contact', link: '/contact' }
     ];
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -188,14 +184,13 @@ export default function NavBar({ handleEditMode }: IProps) {
                             >
                                 <MenuIcon />
                             </IconButton>
-                            <Typography
-                                variant="h6"
-                                noWrap
-                                component="div"
+                            <MenuItem
+                                component={NavLink}
+                                to="/"
                                 sx={{ display: { xs: 'none', sm: 'block' } }}
                             >
-                                Activities
-                            </Typography>
+                               <Typography variant='button'>Reactivities</Typography>
+                            </MenuItem>
                             <Search>
                                 <SearchIconWrapper>
                                     <SearchIcon />
@@ -210,25 +205,20 @@ export default function NavBar({ handleEditMode }: IProps) {
                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                     {
                                         menueList.map((item, index) => (
-                                            <MenuItem key={index + item.label}
-                                                component="div"
-                                                sx={{ display: { xs: 'none', sm: 'block' } }}
+                                            <MenueItemLink  key={index + item.label}
+                                                to={item.link}
                                             >
-                                                {item.label}
-                                            </MenuItem>)
+                                               <Typography variant='body1'> {item.label}</Typography>
+                                            </MenueItemLink>)
                                         )}
                                 </Box>
                             </Box>
                             <Box sx={{ display: { xs: 'none', md: 'block' } }}>
-                                <Button size='large' variant="contained" color="warning"
-                                    sx={{ marginLeft: 2 }}
-                                >
-                                    <Typography
-                                        onClick={handleEditMode}
-                                        variant="button" sx={{ textTransform: 'none', color: 'white' }}>
+                                <MenuItem  component={NavLink} to='/create-activity'>
+                                    <Typography>
                                         New
                                     </Typography>
-                                </Button>
+                                </MenuItem>
                                 {/* <IconButton
                                     size="large"
                                     aria-label="show more"
@@ -252,7 +242,18 @@ export default function NavBar({ handleEditMode }: IProps) {
                                     <MoreIcon />
                                 </IconButton>
                             </Box>
-
+                            <Box sx={{ display: { xs: 'flex', md: 'flex' } }}>
+                                <IconButton
+                                    size="large"
+                                    aria-label="User account"
+                                    aria-controls={menuId}
+                                    aria-haspopup="true"
+                                    onClick={handleProfileMenuOpen}
+                                    color="inherit"
+                                >
+                                    <AccountCircle />
+                                </IconButton>
+                            </Box>
                         </Toolbar>
                     </Container>
                 </AppBar>

@@ -1,14 +1,14 @@
 import { Box, Button, Card, CardActions, CardContent, Chip, Typography } from "@mui/material";
-import type { IActivity } from "../../../lib/types";
-import { formatDate } from "../../../helpers/DateFormatter";
-import { useActivities } from "../../../lib/hooks/useActivities";
+import type { IActivity } from "../../../../lib/types";
+import { formatDate } from "../../../../helpers/DateFormatter";
+import { useActivities } from "../../../../lib/hooks/useActivities";
+import { NavLink } from "react-router";
 
 interface IProps {
   activity: IActivity;
-  handleActivitySelect?: (id: string) => void;
 }
 
-const ActivityCard = ({ activity, handleActivitySelect }: IProps) => {
+const ActivityCard = ({ activity }: IProps) => {
   const {deleteActvity} = useActivities();
 
   return (
@@ -30,7 +30,7 @@ const ActivityCard = ({ activity, handleActivitySelect }: IProps) => {
       <CardActions sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Chip label={activity.category} color="primary" variant="outlined" />
         <Box sx={{ display: 'flex', gap: 2 }}>
-          <Button size="medium" variant="contained" color="primary" onClick={() => handleActivitySelect?.(activity.id)}>
+          <Button component={NavLink} to={`/activities/${activity.id}`} size="medium" variant="contained" color="primary" onClick={() => {}}>
             VIEW
           </Button>
           <Button size="medium" variant="contained" color="error" 
