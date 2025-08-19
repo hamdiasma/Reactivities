@@ -1,19 +1,35 @@
-import { Box, Button, Card, CardActions, CardContent, CardMedia, Chip, Typography } from "@mui/material";
-import { formatDate } from "../../../../helpers/DateFormatter";
-import { NavLink, useNavigate, useParams } from "react-router";
+import {  Grid } from "@mui/material";
+import { useParams } from "react-router";
 import { useActivities } from "../../../../lib/hooks/useActivities";
+import ActivityDetailsHeader from "./ActivityDetailsHeader";
+import ActivityDetailsInfo from "./ActivityDetailsInfo";
+import ActivityDetailsChats from "./ActivityDetailsChats";
+import ActivityDetailsSideBar from "./ActivityDetailsSideBar";
 
 
 
-function ActivityDetails() {
-    const navigate = useNavigate()
+function ActivityDetailsPage() {
     const { id } = useParams<{ id: string }>();
-   const {activity, isLoadinActivity} = useActivities(id);
-   
-   if (isLoadinActivity) return <div>Loading...</div>;
+    const { activity, isLoadinActivity } = useActivities(id);
+
+    if (isLoadinActivity) return <div>Loading...</div>;
     if (!activity) return <div>Activity not found</div>;
     return (
-        <Card sx={{ borderRadius: 3, marginBottom: 2 }}>
+        <Grid container spacing={3}>
+            <Grid size={8}>
+                <ActivityDetailsHeader activity={activity}/>
+                <ActivityDetailsInfo  activity={activity}/>
+                <ActivityDetailsChats  activity={activity}/>
+            </Grid>
+            <Grid size={4}>
+                <ActivityDetailsSideBar />
+            </Grid>
+        </Grid>
+    )
+}
+
+export default ActivityDetailsPage
+{/* <Card sx={{ borderRadius: 3, marginBottom: 2 }}>
             <CardMedia component='img'
                 src={`/images/categoryImages/${activity.category}.jpg`}
             />
@@ -33,8 +49,4 @@ function ActivityDetails() {
                 </Button>
                 </Box>
             </CardActions>
-        </Card>
-    )
-}
-
-export default ActivityDetails
+        </Card> */}
