@@ -1,4 +1,4 @@
-import { Button, Card, CardActions, CardContent, CardMedia, Typography } from "@mui/material";
+import { Box, Button, Card, CardActions, CardContent, CardMedia, Chip, Typography } from "@mui/material";
 import { formatDate } from "../../../../helpers/DateFormatter";
 import { NavLink, useNavigate, useParams } from "react-router";
 import { useActivities } from "../../../../lib/hooks/useActivities";
@@ -22,13 +22,16 @@ function ActivityDetails() {
                 <Typography variant="subtitle1" fontWeight='light'>{formatDate(activity.date)}</Typography>
                 <Typography variant="body1">{activity.description}</Typography>
             </CardContent>
-            <CardActions sx={{ display: 'flex', gap: 2, justifyContent: 'end' }}>
-                <Button component={NavLink} to={`/manage/${activity.id}`} size="medium" color="primary" >
+            <CardActions sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Chip label={activity.category} color="primary" variant="outlined" />
+                <Box sx={{ display: 'flex', gap: 2 }}>
+                    <Button component={NavLink} to={`/manage/${activity.id}`} size="medium" color="primary" >
                    Edit
                 </Button>
                 <Button size="medium" color="inherit" onClick={()=>navigate('/activities')}>
                    Cancel
                 </Button>
+                </Box>
             </CardActions>
         </Card>
     )

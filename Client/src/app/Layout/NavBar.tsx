@@ -71,7 +71,6 @@ export default function NavBar() {
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);
     const menueList = [
-        { label: 'Home', link: '/' },
         { label: 'Activities', link: '/activities' },
     ];
     const isMenuOpen = Boolean(anchorEl);

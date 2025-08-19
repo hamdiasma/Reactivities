@@ -15,7 +15,7 @@ export const useActivities = (id?:string) => {
             const response = await agent.get<IActivity[]>("/activities");
             return response.data;
         },
-        
+
     })
 
      const { data: activity, isLoading:isLoadinActivity } = useQuery({
@@ -38,8 +38,10 @@ export const useActivities = (id?:string) => {
      
      const createActvity =  useMutation({
         mutationFn: async (activity: IActivity) =>{
-            await agent.post<IActivity>(`/activities`, activity);
+          const response =  await agent.post<IActivity>(`/activities`, activity);
+          return response.data;
         },
+        
         onSuccess: async () => {
             queryClient.invalidateQueries({ queryKey: ['activities'] });
         }

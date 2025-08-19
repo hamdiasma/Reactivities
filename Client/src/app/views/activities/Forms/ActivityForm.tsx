@@ -3,9 +3,12 @@ import type { IActivity } from "../../../../lib/types";
 import { useActivities } from "../../../../lib/hooks/useActivities";
 import { useNavigate, useParams } from "react-router";
 
+interface IProps {
+    name?: string;
+}
 
-export const ActivityForm = () => {
-
+export const ActivityForm = (props :IProps) => {
+    // console.log( props);
     const { id } = useParams<{ id: string }>();
     const { updateActvity, createActvity, activity, isLoadinActivity } = useActivities(id);
     const navigate = useNavigate();
@@ -24,8 +27,11 @@ export const ActivityForm = () => {
             await updateActvity.mutateAsync(data as unknown as IActivity);
             navigate(`/activities/${activity.id}`);
         } else {
-            await createActvity.mutateAsync(data as unknown as IActivity);
-            navigate('/activities');
+             createActvity.mutate(data as unknown as IActivity,{
+                onSuccess: (id) => {
+                    navigate(`/activities/${id}`);
+                }
+             } );
         }
     }
 
@@ -37,8 +43,10 @@ export const ActivityForm = () => {
             <Grid size={{ md: 2 }} width={'100%'}></Grid>
             <Grid size={{ md: 8 }} width={'100%'}>
                 <Paper sx={{ padding: 2, borderRadius: 3, marginBottom: 2 }}>
-                    <Typography variant="h5" color="primary" align="center" gutterBottom>
-                        {!id ?  'Create Activity' : 'Edit Activity'}
+                    <Typography variant="h5" color="primary" align="center" gutterBottom style={{ fontWeight: 'bold',
+                        textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '20px'
+                     }}>
+                        { props.name } Activity
                     </Typography>
                     {/* Form fields will go here */}
                     <Box component='form' onSubmit={handelSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>

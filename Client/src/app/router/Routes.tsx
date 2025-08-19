@@ -16,8 +16,8 @@ export const router = createBrowserRouter([
       { path: "", element: <HomePage/> },
       { path: "/activities", element: <ActivityDashboard/> },
       { path: "/activities/:id", element: <ActivityDetails/> },
-      { path: "/create-activity", element: <ActivityForm/> },
-      { path: "/manage/:id", element: <ActivityForm/> },
+      { path: "/create-activity", element: <ActivityForm key='create' name='Create'/> },
+      { path: "/manage/:id", element: <ActivityForm key='update' name='Update'/> },
     ]
   },
 ]);
