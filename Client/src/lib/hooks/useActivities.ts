@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { IActivity } from "../types";
 import agent from "../api/agent";
+import { useLocation } from "react-router";
 
 
 // query function to fetch activities
@@ -9,13 +10,15 @@ import agent from "../api/agent";
 // mutation function to create activities
 export const useActivities = (id?:string) => {
     const queryClient = useQueryClient();
+    const location  = useLocation()
     const { data: activities, isPending } = useQuery({
         queryKey: ['activities'],
         queryFn: async () => {
             const response = await agent.get<IActivity[]>("/activities");
             return response.data;
         },
-
+        // staleTime:1000*60 * 6
+       enabled : !id && location.pathname ==="/activities"
     })
 
      const { data: activity, isLoading:isLoadinActivity } = useQuery({
@@ -41,7 +44,7 @@ export const useActivities = (id?:string) => {
           const response =  await agent.post<IActivity>(`/activities`, activity);
           return response.data;
         },
-        
+
         onSuccess: async () => {
             queryClient.invalidateQueries({ queryKey: ['activities'] });
         }

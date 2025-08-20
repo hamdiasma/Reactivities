@@ -15,9 +15,11 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import {  Container, CssBaseline } from '@mui/material';
+import {  Container, CssBaseline, LinearProgress } from '@mui/material';
 import { NavLink } from 'react-router';
 import MenueItemLink from '../Shared/Components/MenueItemLink';
+import { useStore } from '../../lib/hooks/useStore';
+import { Observer } from 'mobx-react-lite';
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -67,11 +69,16 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function NavBar() {
+
+  const {uiStore} = useStore()
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);
     const menueList = [
         { label: 'Activities', link: '/activities' },
+        { label: 'Counter', link: '/counter' },
+        
     ];
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -171,7 +178,11 @@ export default function NavBar() {
         <>
             <CssBaseline />
             <Box sx={{ flexGrow: 1 }}>
-                <AppBar position="fixed">
+                <AppBar position="fixed" 
+                sx={{
+                    backgroundColor:'linear-gradient(135deg, #182a73 0%, #218aae 69%, #20a7ac 89%)'
+                }}
+                >
                     <Container maxWidth='lg'>
                         <Toolbar>
                             <IconButton
@@ -255,6 +266,22 @@ export default function NavBar() {
                             </Box>
                         </Toolbar>
                     </Container>
+                    <Observer>
+                        {()=>uiStore.isLoading ? (
+                            <>
+                            <LinearProgress
+                            color='secondary'
+                            sx={{
+                                position:"absolute",
+                                left:0,
+                                right:0,
+                                bottom:0,
+                                height:4,
+                            }}
+                            />
+                            </>
+                        ):null}
+                    </Observer>
                 </AppBar>
                 {renderMobileMenu}
                 {renderMenu}
