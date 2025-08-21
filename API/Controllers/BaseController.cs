@@ -13,11 +13,11 @@ namespace API.Controllers
             ?? throw new InvalidOperationException("Mediator service is not registered.");
 
 
-        protected ActionResult<T> HandleResult<T>(Result<T> result)
+        protected ActionResult HandleResult<T>(Result<T> result)
         {
             if (result.Code == 404 && !result.IsSuccess) return NotFound();
 
-            if (result.IsSuccess && result.Value != null) return result.Value;
+            if (result.IsSuccess && result.Value != null) return Ok(result.Value);
 
             return BadRequest(result.Error);
         }

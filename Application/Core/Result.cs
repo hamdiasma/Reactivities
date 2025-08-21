@@ -9,7 +9,6 @@ public class Result<T>
     public string? Error { get; set; }
     public int Code { get; set; }
 
-
     public static Result<T> Success(T value)
     {
         return new()
