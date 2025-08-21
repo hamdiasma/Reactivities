@@ -42,7 +42,11 @@ namespace API.Extensions
                 })
             );
             
-            services.AddMediatR(x=>x.RegisterServicesFromAssemblyContaining<GetActivitiesList.Handler>());
+            services.AddMediatR(x=>
+            {
+                x.RegisterServicesFromAssemblyContaining<GetActivitiesList.Handler>();
+                x.AddOpenBehavior(typeof(ValidationBehavior<,>));
+                });
             // services.AddMediatR(x=>x.RegisterServicesFromAssemblyContaining<GetActivityDetails.Query>());
             // automapper
             services.AddAutoMapper(typeof(MappingProfiles).Assembly);

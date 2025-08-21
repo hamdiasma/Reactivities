@@ -12,7 +12,5 @@ public class CreateActivityValidator : AbstractValidator<CreateActivity.Command>
         .MaximumLength(100).WithMessage("Title has max length {}");
 
         RuleFor(x => x.ActivityDto.Description).NotEmpty().WithMessage("Description is required");
-
     }
-
 }
