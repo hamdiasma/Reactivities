@@ -1,5 +1,6 @@
 import {
   createBrowserRouter,
+  Navigate,
 } from "react-router";
 
 import App from "../Layout/App";
@@ -8,6 +9,9 @@ import { ActivityForm } from "../views/activities/Forms/ActivityForm";
 import ActivityDashboard from "../views/activities/Dashboard/ActivityDashboard";
 import ActivityDetailsPage from "../views/activities/Details/ActivityDetailsPage";
 import Counter from "../views/Counter";
+import TestErrors from "../views/Errors/ErrorPage";
+import NotFound from "../views/Errors/NotFound";
+import ServerError from "../views/Errors/ServerError";
 
 export const router = createBrowserRouter([
   {
@@ -20,6 +24,10 @@ export const router = createBrowserRouter([
       { path: "/create-activity", element: <ActivityForm key='create' name='Create'/> },
       { path: "/manage/:id", element: <ActivityForm key='update' name='Update'/> },
       { path: "/counter", element: <Counter/> },
+      { path: "/errors", element: <TestErrors/> },
+      { path: "/not-found", element: <NotFound/> },
+      { path: "/server-error", element: <ServerError/> },
+      { path: "*", element: <Navigate replace to="/not-found"/> },
     ]
   },
 ]);

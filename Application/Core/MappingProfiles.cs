@@ -11,6 +11,6 @@ public class MappingProfiles : Profile
     {
         CreateMap<Activity, Activity>();
         CreateMap<CreateActivityDto, Activity>(); // source => distination
+        CreateMap<EditActivityDto, Activity>(); // source => distination
     }
-
 }
