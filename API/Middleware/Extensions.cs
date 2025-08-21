@@ -1,7 +1,8 @@
 using System;
 using Application.Activities.Queries;
 using Application.Core;
-
+using Application.Validaors;
+using FluentValidation;
 
 namespace API.Extensions
 {
@@ -43,9 +44,11 @@ namespace API.Extensions
             
             services.AddMediatR(x=>x.RegisterServicesFromAssemblyContaining<GetActivitiesList.Handler>());
             // services.AddMediatR(x=>x.RegisterServicesFromAssemblyContaining<GetActivityDetails.Query>());
-
             // automapper
             services.AddAutoMapper(typeof(MappingProfiles).Assembly);
+
+            // validation services
+            services.AddValidatorsFromAssemblyContaining<CreateActivityValidator>();
             // -------------------------
             // 📌 TODO : Autres services personnalisés
             // -------------------------
