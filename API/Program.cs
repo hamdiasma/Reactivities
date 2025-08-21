@@ -1,5 +1,6 @@
 
 using API.Extensions;
+using API.Middleware;
 using Application.Core;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Application;
@@ -18,8 +19,12 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+
+builder.Services.AddTransient<ExceptionMiddleware>();
+
 var app = builder.Build();
 
+app.UseMiddleware<ExceptionMiddleware>();
 // Configure the HTTP request pipeline.
 // if (app.Environment.IsDevelopment())
 // {
