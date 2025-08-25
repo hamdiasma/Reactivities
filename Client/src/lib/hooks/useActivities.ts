@@ -18,7 +18,8 @@ export const useActivities = (id?:string) => {
             return response.data;
         },
         // staleTime:1000*60 * 6
-       enabled : !id && location.pathname ==="/activities"
+       enabled : !id && location.pathname ==="/activities",
+       staleTime:1000*60 *1
     })
 
      const { data: activity, isLoading:isLoadinActivity } = useQuery({

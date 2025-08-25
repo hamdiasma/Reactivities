@@ -1,0 +1,96 @@
+import { useController, type FieldValues, type UseControllerProps } from "react-hook-form"
+import { Box, debounce, List, ListItemButton, TextField, Typography } from "@mui/material"
+import { useEffect, useMemo, useState } from "react"
+import type { ILocationIQSuggsetion } from "../../../lib/types"
+import axios from "axios"
+
+type Props<T extends FieldValues> = { label: string } & UseControllerProps<T>
+
+export default function LocationInput<T extends FieldValues>(props: Props<T>) {
+
+    const { field, fieldState } = useController({ ...props })
+
+    const [loading, setLoading] = useState(false)
+    const [suggestions, setSuggestions] = useState<ILocationIQSuggsetion[]>([])
+    const [inputValue, setInputValue] = useState(field.value || '')
+
+    useEffect(() => {
+        if (field.value && typeof field.value === "object") {
+            setInputValue(field.value.venue)
+        } else {
+            setInputValue(field.value || "")
+        }
+    }, [field.value])
+
+
+    const locationUrl = `https://api.locationiq.com/v1/autocomplete?key=${import.meta.env.VITE_IQ_API_Access_Token}&limit=5&dedupe=1`
+
+    const fetchSuggestion = useMemo(() => debounce(async (query: string) => {
+        if (!query || query.length < 3) {
+            setSuggestions([])
+            return;
+        }
+        setLoading(true)
+        try {
+            const res = await axios.get<ILocationIQSuggsetion[]>(`${locationUrl}&q=${query}`)
+            setSuggestions(res.data)
+        } catch (error) {
+            console.log(error);
+
+        } finally {
+            setLoading(false)
+        }
+
+    }, 500), [locationUrl])
+
+
+    const handleChange = async (value: string) => {
+        field.onChange(value)
+        await fetchSuggestion(value)
+    }
+
+    const handleSelect = (location: ILocationIQSuggsetion) => {
+        const city = location.address?.city || location.address?.town || location.address?.village;
+        const venue = location.display_name;
+        const Latitude = location.lat;
+        const Langitude = location.lon;
+
+        setInputValue(venue)
+        field.onChange({
+            city, venue, Langitude, Latitude
+        })
+
+        setSuggestions([])
+    }
+
+    return (
+        <Box>
+            <TextField
+                {...props}
+                onChange={e => handleChange(e.target.value)}
+                value={inputValue}
+                fullWidth
+                variant="outlined"
+                error={!!fieldState.error}
+                helperText={fieldState.error?.message}
+            //  InputLabelProps={{ shrink: true }}
+            />
+            {loading && <Typography>Loading...</Typography>}
+            {suggestions.length > 0 && (
+
+                <List sx={{ border: '1px' }}>
+                    {suggestions.map(suggestion => (
+                        <ListItemButton
+                            divider
+                            key={suggestion.place_id}
+                            onClick={() => handleSelect(suggestion)}
+                        >
+                            {suggestion.display_name}
+                        </ListItemButton>
+                    ))}
+                </List>
+            )}
+        </Box>
+
+    )
+}
