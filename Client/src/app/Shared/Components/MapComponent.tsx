@@ -1,6 +1,4 @@
-import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet'
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
+import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 import "leaflet/dist/leaflet.css";
 import { Avatar, Box } from '@mui/material';
 
