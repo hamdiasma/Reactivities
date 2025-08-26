@@ -1,7 +1,9 @@
 import { CalendarToday, Info, Place } from "@mui/icons-material";
-import { Divider, Grid, Paper, Typography } from "@mui/material";
+import { Box, Button, Divider, Grid, Paper, Typography } from "@mui/material";
 import type { IActivity } from "../../../../lib/types";
 import { formatDate } from "../../../../lib/util/util";
+import { useState } from "react";
+import MapComponent from "../../../Shared/Components/MapComponent";
 
 
 interface IProps {
@@ -9,6 +11,8 @@ interface IProps {
 }
 
 export default function ActivityDetailsInfo({activity}:IProps) {
+const [mapOpen,setMapOpen] = useState(true)
+
     return (
         <Paper sx={{ mb: 2 }}>
             <Grid container alignItems="center" pl={2} py={1}>
@@ -33,12 +37,18 @@ export default function ActivityDetailsInfo({activity}:IProps) {
                 <Grid size={1}>
                     <Place color="info" fontSize="large" />
                 </Grid>
-                <Grid size={11}>
+                <Grid size={11} display={'flex'} justifyContent={'space-between'}>
                     <Typography>
                         {activity.venue}, {activity.city}
                     </Typography>
+                    <Button sx={{whiteSpace:'nowrap'}} onClick={()=>setMapOpen(!mapOpen)}>
+                        {mapOpen ?  'Hide map' : 'Show map'}
+                    </Button>
                 </Grid>
             </Grid>
+            {mapOpen &&(<Box sx={{height:400, zIndex:1000, display:'block'}}>
+                <MapComponent position={[activity.latitude, activity.langitude]} venue={activity.venue}/>
+            </Box>)}
         </Paper>
     )
 }

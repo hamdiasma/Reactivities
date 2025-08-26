@@ -1,10 +1,10 @@
 export interface IActivity{
-    id: string;
+    id?: string;
     title: string;
     description: string;
     date: Date ; // Use string for date to match JSON format
     category: string;
-    isCancelled: boolean;
+    isCancelled?: boolean;
     city: string;
     venue: string;
     latitude: number;
@@ -32,7 +32,8 @@ export interface ILocationIQAddress {
   name: string
   city?: string
   town?:string
-  village?:string
+  village?:string,
+  county?:string,
   county: string
   state: string
   postcode: string

@@ -7,9 +7,9 @@ import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import CoffeeIcon from "@mui/icons-material/Coffee";
 
 export const categoryOptions = [
-   { text: "Café", value: "cafe", icon: <CoffeeIcon /> },
+  { text: "Café", value: "cafe", icon: <CoffeeIcon /> },
   { text: "Sport", value: "sport", icon: <SportsSoccerIcon /> },
-  { text: "Campings", value: "camping", icon: <ParkIcon /> },
+  { text: "Camping", value: "camping", icon: <ParkIcon /> },
   { text: "Culture", value: "culture", icon: <TheaterComedyIcon /> },
   { text: "Travel", value: "travel", icon: <TravelExploreIcon /> },
   { text: "Food", value: "food", icon: <RestaurantIcon /> },

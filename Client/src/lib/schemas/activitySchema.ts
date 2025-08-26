@@ -16,15 +16,9 @@ export const activitySchema = z.object({
   }),
   location: z.object({
     city: requiredString('City'),
-    venue: z.string().optional(),
-    Latitude: z.coerce.number({
-      required_error: "Latitude est requise",
-      invalid_type_error: "Latitude doit être un nombre"
-    }),
-    Langitude: z.coerce.number({
-      required_error: "Longitude est requise",
-      invalid_type_error: "Longitude doit être un nombre"
-    })
+    venue: requiredString('aVENU'),
+    latitude: z.coerce.number(),
+    langitude: z.coerce.number()
   })
 });
 
