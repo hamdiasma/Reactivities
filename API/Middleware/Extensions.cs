@@ -33,6 +33,7 @@ namespace API.Extensions
                 options.AddDefaultPolicy(policyBuilder =>
                 {
                     policyBuilder
+                        .AllowCredentials()
                         .WithOrigins(configuration
                             .GetSection("AllowedOrigins")
                             .Get<string[]>()!) // Liste des origines autorisées
@@ -41,12 +42,12 @@ namespace API.Extensions
                         .AllowAnyMethod(); // Autorise toutes les méthodes HTTP (sécurité plus faible si activée)
                 })
             );
-            
-            services.AddMediatR(x=>
+
+            services.AddMediatR(x =>
             {
                 x.RegisterServicesFromAssemblyContaining<GetActivitiesList.Handler>();
                 x.AddOpenBehavior(typeof(ValidationBehavior<,>));
-                });
+            });
             // services.AddMediatR(x=>x.RegisterServicesFromAssemblyContaining<GetActivityDetails.Query>());
             // automapper
             services.AddAutoMapper(typeof(MappingProfiles).Assembly);

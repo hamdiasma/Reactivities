@@ -2,13 +2,24 @@
 using API.Extensions;
 using API.Middleware;
 using Application.Core;
+using Domain;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers(options=>
+{
+     // add authorization filter globally
+  var authPolicy = new AuthorizationPolicyBuilder()
+  .RequireAuthenticatedUser() // require authenticated user
+  .Build();
+  options.Filters.Add(new AuthorizeFilter(authPolicy)); // add authorization filter globally
+});
 builder.Services.AddCustomServices(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -22,14 +33,14 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 
 builder.Services.AddTransient<ExceptionMiddleware>();
 
-var app = builder.Build();
+builder.Services.AddIdentityApiEndpoints<User>(options =>
+{
+    options.User.RequireUniqueEmail = true;
+}).AddRoles<Role>()
+.AddEntityFrameworkStores<AppDbContext>();
 
+var app = builder.Build();
 app.UseMiddleware<ExceptionMiddleware>();
-// Configure the HTTP request pipeline.
-// if (app.Environment.IsDevelopment())
-// {
-//     app.MapOpenApi();
-// }
 
 if (app.Environment.IsDevelopment())
 {
@@ -40,20 +51,22 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors();
 app.MapControllers();
+app.MapGroup("api").MapIdentityApi<User>();
 using var scope = app.Services.CreateScope();
 var servives = scope.ServiceProvider;
 try
 {
     var context = servives.GetRequiredService<AppDbContext>();
+    var userManager = servives.GetRequiredService<UserManager<User>>();
     await context.Database.MigrateAsync();
-    await DbInitilizer.SeedData(context);
+    await DbInitilizer.SeedData(context,userManager);
 }
 catch (Exception ex)
 {
-
     var logger = servives.GetRequiredService<ILogger<Program>>();
     logger.LogError(ex, "An error occurred during migration");
     throw;

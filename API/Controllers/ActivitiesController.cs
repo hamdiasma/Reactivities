@@ -3,10 +3,10 @@ using Application.Activities.Cammands;
 using Application.Activities.DTOs;
 using Application.Activities.Queries;
 using Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
-
 public class ActivitiesController : BaseApiController
 {
 
@@ -15,7 +15,7 @@ public class ActivitiesController : BaseApiController
     {
         return await Mediator.Send(new GetActivitiesList.Query());
     }
-
+    [Authorize]
     [HttpGet("{id}")]
     public async Task<ActionResult<Activity>> GetActivityDetail(string id)
     {
