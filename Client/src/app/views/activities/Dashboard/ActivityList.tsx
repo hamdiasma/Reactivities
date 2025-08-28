@@ -4,9 +4,10 @@ import { useActivities } from "../../../../lib/hooks/useActivities";
 
 
 function ActivityList() {
-const {activities, isPending} = useActivities()
+const {activities, isFetching} = useActivities()
+console.log({isFetching});
 
-if (isPending) return <div>Loading...</div>;
+if (isFetching) return <div>Loading...</div>;
 if (!activities) return <div>No activities found</div>;
 
     return (

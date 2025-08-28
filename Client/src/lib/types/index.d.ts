@@ -1,5 +1,5 @@
-export interface IActivity{
-    id?: string;
+ interface IActivity{
+    id: string;
     title: string;
     description: string;
     date: Date ; // Use string for date to match JSON format
@@ -11,8 +11,17 @@ export interface IActivity{
     langitude: number;
 }
 
+interface IUser {
+  email: string
+  id: string
+  imageUrl?: string
+  displayName: string
+  roles: Roles
+}
 
-export interface ILocationIQSuggsetion {
+type Roles = string[]
+
+ interface ILocationIQSuggsetion {
   place_id: string
   osm_id: string
   osm_type: string
@@ -28,7 +37,7 @@ export interface ILocationIQSuggsetion {
   address: ILocationIQAddress
 }
 
-export interface ILocationIQAddress {
+ interface ILocationIQAddress {
   name: string
   city?: string
   town?:string

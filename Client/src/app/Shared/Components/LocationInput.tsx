@@ -1,7 +1,6 @@
 import { useController, type FieldValues, type UseControllerProps } from "react-hook-form";
 import { Box, debounce, List, ListItemButton, TextField, Typography, CircularProgress } from "@mui/material";
 import { useEffect, useMemo, useState, useCallback } from "react";
-import type { ILocationIQSuggsetion } from "../../../lib/types";
 import axios from "axios";
 
 type Props<T extends FieldValues> = { label: string } & UseControllerProps<T>;

@@ -1,6 +1,5 @@
 import { Box, Typography, Card, CardContent, TextField, Avatar } from "@mui/material";
 import { Link } from "react-router";
-import type { IActivity } from "../../../../lib/types";
 
 interface IProps {
     activity: IActivity

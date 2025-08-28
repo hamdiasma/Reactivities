@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { IActivity } from "../types";
 import agent from "../api/agent";
 import { useLocation } from "react-router";
+import { useAccount } from "./useAccount";
 
 
 // query function to fetch activities
@@ -11,14 +11,15 @@ import { useLocation } from "react-router";
 export const useActivities = (id?:string) => {
     const queryClient = useQueryClient();
     const location  = useLocation()
-    const { data: activities, isPending } = useQuery({
+    const {currentUser} = useAccount()
+    const { data: activities, isPending ,isFetching} = useQuery({
         queryKey: ['activities'],
         queryFn: async () => {
             const response = await agent.get<IActivity[]>("/activities");
             return response.data;
         },
         // staleTime:1000*60 * 6
-       enabled : !id && location.pathname ==="/activities",
+       enabled : !id && location.pathname ==="/activities" && !!currentUser,
        staleTime:1000*60 *1
     })
 
@@ -28,7 +29,7 @@ export const useActivities = (id?:string) => {
             const response = await agent.get<IActivity>(`/activities/${id}`);
             return response.data;
         },
-        enabled: !!id, // only run this query if id is defined
+        enabled: !!id && !!currentUser, // only run this query if id is defined
     })
 
      const  updateActvity =  useMutation({
@@ -36,7 +37,7 @@ export const useActivities = (id?:string) => {
             await agent.put<IActivity>(`/activities`, activity);
         },
         onSuccess:async () => {
-            queryClient.invalidateQueries({ queryKey: ['activities'] });
+            queryClient.invalidateQueries({ queryKey: ['activities'] });  // to appel  activities
         }
      })
      
@@ -58,5 +59,5 @@ export const useActivities = (id?:string) => {
             queryClient.invalidateQueries({ queryKey: ['activities'] });
         }
      })
-    return { activities, isPending, updateActvity, createActvity , deleteActvity,activity, isLoadinActivity };
+    return { activities, isPending, updateActvity, createActvity , deleteActvity,activity, isLoadinActivity, isFetching };
 }

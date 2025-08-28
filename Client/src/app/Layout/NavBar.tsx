@@ -15,12 +15,16 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import {  Container, CssBaseline, LinearProgress } from '@mui/material';
-import { NavLink } from 'react-router';
+import { Button, Container, CssBaseline, Divider, LinearProgress, ListItemIcon, ListItemText } from '@mui/material';
+import { Link, NavLink } from 'react-router';
 import MenueItemLink from '../Shared/Components/MenueItemLink';
 import { useStore } from '../../lib/hooks/useStore';
 import { Observer } from 'mobx-react-lite';
-
+import { useAccount } from '../../lib/hooks/useAccount';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
+import {PlaylistAddOutlined } from '@mui/icons-material';
+import PersonIcon from '@mui/icons-material/Person';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -38,7 +42,7 @@ const Search = styled('div')(({ theme }) => ({
         marginRight: theme.spacing(2),
         diplay: 'flex',
         flexGrow: 100,
-      
+
     },
 }));
 
@@ -50,7 +54,7 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    
+
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
@@ -70,15 +74,15 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function NavBar() {
 
-  const {uiStore} = useStore()
-
+    const { uiStore } = useStore()
+    const { currentUser, logOutUser } = useAccount()
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);
     const menueList = [
         { label: 'Activities', link: '/activities' },
-        { label: 'Counter', link: '/counter' },
-        
+        // { label: 'Counter', link: '/counter' },
+
     ];
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -96,6 +100,11 @@ export default function NavBar() {
         handleMobileMenuClose();
     };
 
+    const logOut = async () => {
+        await logOutUser.mutateAsync()
+        handleMenuClose()
+    }
+
     const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         setMobileMoreAnchorEl(event.currentTarget);
     };
@@ -104,21 +113,34 @@ export default function NavBar() {
     const renderMenu = (
         <Menu
             anchorEl={anchorEl}
-            anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
+
             id={menuId}
-            keepMounted
-            transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+            slotProps={{
+                list: {
+                    'aria-labelledby': 'basic-button',
+                },
             }}
             open={isMenuOpen}
             onClose={handleMenuClose}
+            sx={{ fontSize: 'small' }}
         >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+            <MenuItem component={Link} to='/create-activity' onClick={handleMenuClose}>
+                <ListItemIcon>
+                    <PlaylistAddOutlined />
+                </ListItemIcon>
+                <ListItemText>New activtiy</ListItemText>
+            </MenuItem>
+            <MenuItem component={Link} to='/profile' onClick={handleMenuClose}>
+                <ListItemIcon>
+                    <PersonIcon />
+                </ListItemIcon>
+                <ListItemText>
+                    <Typography variant='body2'>My profile</Typography>
+                </ListItemText>
+            </MenuItem>
+            <Divider />
+            <MenuItem sx={{ color: 'red' }} onClick={logOut}><PowerSettingsNewIcon fontSize='small' /> Deconnexion</MenuItem>
+
         </Menu>
     );
 
@@ -178,10 +200,10 @@ export default function NavBar() {
         <>
             <CssBaseline />
             <Box sx={{ flexGrow: 1 }}>
-                <AppBar position="fixed" 
-                sx={{
-                    backgroundColor:'linear-gradient(135deg, #182a73 0%, #218aae 69%, #20a7ac 89%)'
-                }}
+                <AppBar position="fixed"
+                    sx={{
+                        backgroundColor: 'linear-gradient(135deg, #182a73 0%, #218aae 69%, #20a7ac 89%)'
+                    }}
                 >
                     <Container maxWidth='lg'>
                         <Toolbar>
@@ -199,7 +221,7 @@ export default function NavBar() {
                                 to="/"
                                 sx={{ display: { xs: 'none', sm: 'block' } }}
                             >
-                               <Typography variant='button'>Reactivities</Typography>
+                                <Typography variant='button'>Reactivities</Typography>
                             </MenuItem>
                             <Search>
                                 <SearchIconWrapper>
@@ -215,16 +237,16 @@ export default function NavBar() {
                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                     {
                                         menueList.map((item, index) => (
-                                            <MenueItemLink  key={index + item.label}
+                                            <MenueItemLink key={index + item.label}
                                                 to={item.link}
                                             >
-                                               <Typography variant='body1'> {item.label}</Typography>
+                                                <Typography variant='body1'> {item.label}</Typography>
                                             </MenueItemLink>)
                                         )}
                                 </Box>
                             </Box>
                             <Box sx={{ display: { xs: 'none', md: 'block' } }}>
-                                <MenuItem  component={NavLink} to='/create-activity'>
+                                <MenuItem component={NavLink} to='/create-activity'>
                                     <Typography>
                                         New
                                     </Typography>
@@ -253,34 +275,47 @@ export default function NavBar() {
                                 </IconButton>
                             </Box>
                             <Box sx={{ display: { xs: 'flex', md: 'flex' } }}>
-                                <IconButton
-                                    size="large"
-                                    aria-label="User account"
-                                    aria-controls={menuId}
-                                    aria-haspopup="true"
-                                    onClick={handleProfileMenuOpen}
-                                    color="inherit"
-                                >
-                                    <AccountCircle />
-                                </IconButton>
+                                {currentUser ? (
+                                    <IconButton
+                                        size="large"
+                                        aria-label="User account"
+                                        aria-controls={menuId}
+                                        aria-haspopup="true"
+                                        onClick={handleProfileMenuOpen}
+                                        color="inherit"
+                                        sx={{ display: 'flex', alignItems: 'center' }}
+                                    >
+                                        <AccountCircle /> <Typography variant='body2' ml={'3px'} p={0} pt={'4px'}>{currentUser.displayName}!</Typography>
+                                    </IconButton>
+                                ) :
+                                    <Box display={'flex'} alignItems={'center'}>
+                                        <MenueItemLink to='/login' >
+                                            <Button variant='contained' color='warning'
+                                                sx={{ display: 'flex', alignItems: 'center' }}
+                                            ><LockOpenIcon fontSize='small' sx={{ mr: '2px' }} />  Connexion</Button>
+                                        </MenueItemLink>
+
+                                        <MenueItemLink to='/register'>Register</MenueItemLink>
+                                    </Box>
+                                }
                             </Box>
                         </Toolbar>
                     </Container>
                     <Observer>
-                        {()=>uiStore.isLoading ? (
+                        {() => uiStore.isLoading ? (
                             <>
-                            <LinearProgress
-                            color='secondary'
-                            sx={{
-                                position:"absolute",
-                                left:0,
-                                right:0,
-                                bottom:0,
-                                height:4,
-                            }}
-                            />
+                                <LinearProgress
+                                    color='secondary'
+                                    sx={{
+                                        position: "absolute",
+                                        left: 0,
+                                        right: 0,
+                                        bottom: 0,
+                                        height: 4,
+                                    }}
+                                />
                             </>
-                        ):null}
+                        ) : null}
                     </Observer>
                 </AppBar>
                 {renderMobileMenu}

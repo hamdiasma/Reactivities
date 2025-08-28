@@ -72,9 +72,9 @@ public class AccountController(
         });
     }
 
-    [HttpGet("logout")]
+    [HttpPost("logout")]
 
-    public async Task<IActionResult> GetLogout()
+    public async Task<IActionResult> PostLogout()
     {
         await signInManager.SignOutAsync();
         return NoContent();

@@ -1,5 +1,4 @@
 import { Avatar, Box, Button, Card, CardContent, CardHeader, Chip, Divider, Typography } from "@mui/material";
-import type { IActivity } from "../../../../lib/types";
 import { Link, NavLink } from "react-router";
 import { AccessTime, Place } from "@mui/icons-material";
 import { format } from 'date-fns'

@@ -8,6 +8,7 @@ const sleep = (delay: number) => new Promise(resolve => setTimeout(resolve, dela
 
 const agent = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
+    withCredentials:true
     // headers: {
     //   "Content-Type": "application/json",
     // },
