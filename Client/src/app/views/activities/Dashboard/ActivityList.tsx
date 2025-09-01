@@ -5,7 +5,6 @@ import { useActivities } from "../../../../lib/hooks/useActivities";
 
 function ActivityList() {
 const {activities, isFetching} = useActivities()
-console.log({isFetching});
 
 if (isFetching) return <div>Loading...</div>;
 if (!activities) return <div>No activities found</div>;

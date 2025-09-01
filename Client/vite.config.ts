@@ -9,4 +9,7 @@ export default defineConfig({
     https: {},
   },
   plugins: [react(),mkcert()],
+  optimizeDeps:{
+    include:["react-slick"]
+  }
 })

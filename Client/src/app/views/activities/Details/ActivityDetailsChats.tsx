@@ -1,13 +1,11 @@
 import { Box, Typography, Card, CardContent, TextField, Avatar } from "@mui/material";
 import { Link } from "react-router";
 
-interface IProps {
-    activity: IActivity
-}
+// interface IProps {
+//     activity: IActivity
+// }
 
-export default function ActivityDetailsChats({activity}:IProps) {
-    console.log(activity.id);
-    
+export default function ActivityDetailsChats() {
     return (
         <>
             <Box

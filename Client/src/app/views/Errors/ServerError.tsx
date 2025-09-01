@@ -1,11 +1,8 @@
 import { Divider, Paper, Typography } from '@mui/material';
-import React from 'react'
 import { useLocation } from 'react-router'
 
 function ServerError() {
     const { state } = useLocation()
-
-    console.log(location);
 
     return (
         <Paper>{

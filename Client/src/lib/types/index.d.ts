@@ -16,7 +16,7 @@ interface IUser {
   id: string
   imageUrl?: string
   displayName: string
-  roles: Roles
+  roles?: Roles
 }
 
 type Roles = string[]

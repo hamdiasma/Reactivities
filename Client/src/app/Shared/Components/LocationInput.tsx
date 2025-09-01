@@ -68,8 +68,6 @@ export default function LocationInput<T extends FieldValues>(props: Props<T>) {
     // Handle suggestion selection
     const handleSelect = useCallback(
         (location: ILocationIQSuggsetion) => {
-            console.log({location, fieldState});
-            
         const city = location.address?.city || location.address?.town || location.address?.village || location.address?.county;
         const venue = location.display_name;
         const latitude = location.lat;
