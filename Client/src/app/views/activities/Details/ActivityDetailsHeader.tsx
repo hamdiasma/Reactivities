@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { formatDate } from "../../../../lib/util/util";
 import { useActivities } from "../../../../lib/hooks/useActivities";
 import StyledButton from "../../../Shared/Components/StyledButton";
+import { getCategoryColor } from "../../../../helpers/RenderColor";
 
 interface IProps {
     activity: IActivity
@@ -16,19 +17,31 @@ export default function ActivityDetailsHeader({ activity }: IProps) {
     const isGoing = activity.isGoing;
 
     const handleSubmit = () => {
-      editAttendance.mutate(activity.id)
+       editAttendance.mutate(activity.id)
     }
 
 
     return (
         <Card sx={{ position: 'relative', mb: 2, backgroundColor: 'transparent', overflow: 'hidden' }}>
+
+            <Box sx={{position: 'absolute', left: 40, top: 20, zIndex: 1000, display:'flex', gap:2,}}>
+                <Chip
+                sx={{
+                     borderRadius: 1,
+                     background: getCategoryColor(activity.category),
+                     color:"white",
+                      textTransform: "capitalize"
+                }}
+                label={activity.category}
+            />
             {isCancelled && (
                 <Chip
-                    sx={{ position: 'absolute', left: 40, top: 20, zIndex: 1000, borderRadius:1 }}
+                    sx={{ borderRadius: 1 }}
                     color="error"
                     label="Cancelled"
                 />
             )}
+            </Box>
             <CardMedia
                 component="img"
                 height="300"
@@ -87,8 +100,8 @@ export default function ActivityDetailsHeader({ activity }: IProps) {
                             disabled={editAttendance.isPending || activity.isCancelled}
                         >
                             {isGoing
-                                    ? 'Cancel Attendance'
-                                    : 'Join Activity'}
+                                ? 'Cancel Attendance'
+                                : 'Join Activity'}
                         </StyledButton>
                     )}
                 </Box>
