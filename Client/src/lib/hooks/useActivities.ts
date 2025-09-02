@@ -31,7 +31,7 @@ export const useActivities = (id?: string) => {
             })
         }
     })
-    
+
     const { data: activity, isLoading: isLoadinActivity } = useQuery({
         queryKey: ['activities', id],
         queryFn: async () => {
@@ -81,8 +81,41 @@ export const useActivities = (id?: string) => {
         mutationFn: async (id: string) => {
             await agent.post(`activities/${id}/attend`)
         },
-        onSuccess: async () => {
-            queryClient.invalidateQueries({ queryKey: ['activities', id] })
+        // add optimistic updating used cache
+        onMutate: async (activityId: string) => {
+            const queryKey = ['activities', activityId]
+            await queryClient.cancelQueries({ queryKey: queryKey })
+            const preavActiviy = queryClient.getQueryData<IActivity>(queryKey)
+
+            queryClient.setQueryData<IActivity>(queryKey, (oldActvity)=> {
+                if (!oldActvity || !currentUser) {
+                    return oldActvity
+                }
+
+                const isHost = oldActvity.hostId === currentUser.id
+                const isAttendng = oldActvity.attendees.some(x => x.id === currentUser.id)
+                return {
+                    ...oldActvity,
+                    isCancelled: isHost ? !oldActvity.isCancelled : oldActvity.isCancelled,
+                    attendees: isAttendng
+                        ? isHost
+                            ? oldActvity.attendees
+                            : oldActvity.attendees.filter(x => x.id != currentUser.id)
+                        : [...oldActvity.attendees, {
+                            id: currentUser.id,
+                            displayName: currentUser.displayName,
+                            imageUrl: currentUser.imageUrl,
+                        }]
+                }
+            })
+        return {preavActiviy}
+        },
+        onError:(error, activityId, context)=>{
+            const queryKey = ['activities', activityId]
+            if(context?.preavActiviy){
+                queryClient.setQueryData(queryKey, context.preavActiviy)
+            }
+           
         }
     })
     return {

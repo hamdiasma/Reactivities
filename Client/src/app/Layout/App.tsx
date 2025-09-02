@@ -1,6 +1,6 @@
 import { Box, Container } from "@mui/material";
 import NavBar from "./NavBar";
-import { Outlet, useLocation } from "react-router";
+import { Outlet, ScrollRestoration, useLocation } from "react-router";
 import HomePage from "../views/Home/HomePage";
 
 function App() {
@@ -8,7 +8,8 @@ function App() {
   const location = useLocation()
 
   return (
-    <Box bgcolor={"#eee"} minHeight={'100vh'} >
+    <Box bgcolor={"#eee"} minHeight={'100vh'}>
+      <ScrollRestoration/>
       {location.pathname === '/' ? <HomePage /> :
         <>
           <NavBar />

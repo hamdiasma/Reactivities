@@ -22,6 +22,7 @@ public class ActivitiesController : BaseApiController
     {
         return HandleResult(await Mediator.Send(new GetActivityDetails.Query { Id = id }));
     }
+    
     [HttpPost]
     public async Task<ActionResult<string>> CreateActivity(CreateActivityDto activityDto)
     {
@@ -38,7 +39,6 @@ public class ActivitiesController : BaseApiController
 
     [HttpDelete("{id}")]
     [Authorize(Policy ="IsActiviyHost")]
-
     public async Task<ActionResult> DeleteActivity(string id)
     {
         return HandleResult(await Mediator.Send(new DeleteActivity.Command { Id = id }));

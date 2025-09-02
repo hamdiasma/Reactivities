@@ -9,7 +9,7 @@ interface IActivity {
   venue: string;
   latitude: number;
   langitude: number;
-  attendees: IUser[],
+  attendees: IProfile[],
   isGoing: boolean,
   isHost: boolean,
   numberOfParicipate: number,
@@ -17,11 +17,14 @@ interface IActivity {
   hostId: string,
 }
 
-interface IUser {
-  email: string
-  id: string
+interface IProfile{
+ id: string
   imageUrl?: string
   displayName: string
+}
+
+interface IUser extends IProfile {
+  email: string
   roles?: Roles
 }
 
