@@ -36,7 +36,6 @@ export const ActivityForm = (props: IProps) => {
                 venue:activity.venue,
                 langitude:activity.langitude,
                 latitude:activity.latitude,
-
             }
         })
     }, [activity, reset])
@@ -88,12 +87,20 @@ export const ActivityForm = (props: IProps) => {
                             name="description"
                             multiline rows={3} />
                         <Grid container sx={{  width: '100%', gap:3 }} spacing={{ md: 5 }}>
-                            <Grid size={{ md: 6 }} width={'100%'}>
+                            <Grid size={{ md: 4 }} width={'100%'}>
                                 <SelectInput
                                     label="Activity Category"
                                     control={control}
                                     name="category"
                                     items={categoryOptions}
+                                />
+                            </Grid>
+                            <Grid size={{ md: 2 }} width={'100%'}>
+                                <TextInput
+                                    label="Participants"
+                                    control={control}
+                                    name="numberOfParicipate"
+                                    type="number"
                                 />
                             </Grid>
                             <Grid size={{ md: 6 }} width={'100%'}>
@@ -104,10 +111,9 @@ export const ActivityForm = (props: IProps) => {
                                 />
                             </Grid>
                         </Grid>
-
                         <LocationInput control={control} name="location" label="Enter the location" />
                         <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2, gap: 2 }}>
-                            <Button color="inherit" onClick={() => { }}>Cancel</Button>
+                            <Button  color="inherit" onClick={() => navigate(`/activities/${id}`)}>Cancel</Button>
                             <Button
                                 type="submit"
                                 variant="contained"

@@ -10,7 +10,7 @@ public class Activity
     public DateTime Date { get; set; } = DateTime.UtcNow;
     public string Category { get; set; } = string.Empty;
     public bool IsCancelled { get; set; }
-    public int NumberOfParicipate { get; set; } = 1;
+    public int? NumberOfParicipate { get; set; }
     
     // location
     public string City { get; set; } = string.Empty;

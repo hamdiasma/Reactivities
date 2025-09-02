@@ -1,14 +1,20 @@
- interface IActivity{
-    id: string;
-    title: string;
-    description: string;
-    date: Date ; // Use string for date to match JSON format
-    category: string;
-    isCancelled?: boolean;
-    city: string;
-    venue: string;
-    latitude: number;
-    langitude: number;
+interface IActivity {
+  id: string;
+  title: string;
+  description: string;
+  date: Date; // Use string for date to match JSON format
+  category: string;
+  isCancelled?: boolean;
+  city: string;
+  venue: string;
+  latitude: number;
+  langitude: number;
+  attendees: IUser[],
+  isGoing: boolean,
+  isHost: boolean,
+  numberOfParicipate: number,
+  hostDisplayName: string,
+  hostId: string,
 }
 
 interface IUser {
@@ -21,7 +27,7 @@ interface IUser {
 
 type Roles = string[]
 
- interface ILocationIQSuggsetion {
+interface ILocationIQSuggsetion {
   place_id: string
   osm_id: string
   osm_type: string
@@ -37,12 +43,12 @@ type Roles = string[]
   address: ILocationIQAddress
 }
 
- interface ILocationIQAddress {
+interface ILocationIQAddress {
   name: string
   city?: string
-  town?:string
-  village?:string,
-  county?:string,
+  town?: string
+  village?: string,
+  county?: string,
   county: string
   state: string
   postcode: string

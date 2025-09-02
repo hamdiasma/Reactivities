@@ -11,7 +11,6 @@ import ActivityDetailsSideBar from "./ActivityDetailsSideBar";
 function ActivityDetailsPage() {
     const { id } = useParams<{ id: string }>();
     const { activity, isLoadinActivity } = useActivities(id);
-
     if (isLoadinActivity) return <div>Loading...</div>;
     if (!activity) return <div>Activity not found</div>;
     return (
@@ -22,7 +21,7 @@ function ActivityDetailsPage() {
                 <ActivityDetailsChats  activity={activity}/>
             </Grid>
             <Grid size={4}>
-                <ActivityDetailsSideBar />
+                <ActivityDetailsSideBar  activity={activity}/>
             </Grid>
         </Grid>
     )

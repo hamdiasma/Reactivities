@@ -1,18 +1,19 @@
-import { Avatar, Box, Button, Card, CardContent, CardHeader, Chip, Divider, Typography } from "@mui/material";
+import { Avatar, AvatarGroup, Box, Button, Card, CardContent, CardHeader, Chip, Divider, Typography } from "@mui/material";
 import { Link, NavLink } from "react-router";
 import { AccessTime, Place } from "@mui/icons-material";
 import { format } from 'date-fns'
+import AvatarPopover from "../../../Shared/Components/AvatarPopover";
 
 interface IProps {
   activity: IActivity;
 }
 
 const ActivityCard = ({ activity }: IProps) => {
-  const isHost = false; // This should be replaced with actual logic to determine if the user is the host
-  const isGoing = false; // This should be replaced with actual logic to determine if the user is going to the activity
-  const label = isHost ? 'You are hosting this activity' : 'You are going to this activity';
-  const isCanceled = false; // This should be replaced with actual logic to determine if the activity is canceled
-  const color = isHost ? 'primary' : isCanceled ? 'error' : isGoing ? 'warning' : 'primary';
+  const isHost = activity.isHost; // This should be replaced with actual logic to determine if the user is the host
+  const isGoing = activity.isGoing; // This should be replaced with actual logic to determine if the user is going to the activity
+  const label = activity.isHost ? 'You are hosting' : 'You are going';
+  const isCanceled = activity.isCancelled; // This should be replaced with actual logic to determine if the activity is canceled
+  const color = isHost ? 'secondary' : isGoing ? 'warning' : 'default';
 
   return (
     <Card elevation={3} sx={{ borderRadius: 3, marginBottom: 2 }}>
@@ -34,14 +35,14 @@ const ActivityCard = ({ activity }: IProps) => {
           }}
 
           subheader={<>
-            Hosted by {' '} <Link to={`/profile/hamdi`} >
-              Hamdi
+            Hosted by {' '} <Link to={`/profiles/${activity.hostId}`}>
+              {activity.hostDisplayName}
             </Link>
           </>}
         ></CardHeader>
         <Box display={'flex'} flexDirection={'column'} gap={2} mr={2}>
-          {isHost || isGoing && (<Chip label={label} color={color} variant="outlined" sx={{ borderRadius: 2 }} />)}
-          {isCanceled && (<Chip label="Canceled" color="error" variant="outlined" sx={{ borderRadius: 2 }} />)}
+          {(isHost || isGoing) && (<Chip variant="outlined" label={label} color={color} sx={{ borderRadius: 2 }} />)}
+          {isCanceled && (<Chip variant="outlined" label="Canceled" color="error" sx={{ borderRadius: 2 }} />)}
         </Box>
       </Box>
       <Divider sx={{ mb: 3 }} />
@@ -61,7 +62,15 @@ const ActivityCard = ({ activity }: IProps) => {
 
         <Divider sx={{ mb: 2 }} />
         <Box display={'flex'} sx={{ backgroundColor: 'grey.200', py: 3, pl: 3 }}>
-          Attendees go here
+          <AvatarGroup max={4}>
+            {activity.attendees.map(att =>
+              <AvatarPopover
+                key={att.id}
+                profile={att}
+              />
+            )}
+          </AvatarGroup>
+
         </Box>
       </CardContent>
       <CardContent sx={{ pb: 2 }}>

@@ -15,13 +15,12 @@ public class ActivityDTO
     public int NumberOfParicipate { get; set; }
     public required string HostDisplayName { get; set; }
     public required string HostId { get; set; }
-    
     // location
     public required string City { get; set; }
     public required string Venue { get; set; }
     public double Latitude { get; set; }
     public double Langitude { get; set; }
-
+    
     // navigation proprerities
     public ICollection<UserProfile> Attendees { get; set; } = [];//many to many
 }
