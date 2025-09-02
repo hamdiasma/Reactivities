@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using Application.Activities;
 using Application.Activities.Enum;
 
-namespace API.DTOs;
+namespace Application.DTOs;
 
 public class RegisterDTO
 {

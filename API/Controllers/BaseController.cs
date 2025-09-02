@@ -12,7 +12,6 @@ namespace API.Controllers
         protected IMediator Mediator => _mediator ??= HttpContext.RequestServices.GetService<IMediator>()
             ?? throw new InvalidOperationException("Mediator service is not registered.");
 
-
         protected ActionResult HandleResult<T>(Result<T> result)
         {
             if (result.Code == 404 && !result.IsSuccess) return NotFound();

@@ -9,13 +9,13 @@ public class DeleteActivity
 {
     public class Command : IRequest<Result<Unit>>
     {
-        public required string ID { get; set; }
+        public required string Id { get; set; }
     }
     public class Handler(AppDbContext dbContext) : IRequestHandler<Command, Result<Unit>>
     {
         public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
         {
-            var activity = await dbContext.Activities.FindAsync([request.ID], cancellationToken);
+            var activity = await dbContext.Activities.FindAsync([request.Id], cancellationToken);
 
 
             if (activity == null)

@@ -1,8 +1,10 @@
 using System;
 using Application.Activities.Queries;
 using Application.Core;
+using Application.Interfaces;
 using Application.Validaors;
 using FluentValidation;
+using Infrastructure.Security;
 
 namespace API.Extensions
 {
@@ -60,7 +62,9 @@ namespace API.Extensions
             // Exemple :
             // services.AddScoped<IMyService, MyService>();
             // services.AddSingleton<ICacheService, MemoryCacheService>();
+            services.AddScoped<IUserAccessor, UserAccessor>();
 
+           
             return services;
         }
     }

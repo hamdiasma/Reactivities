@@ -1,11 +1,10 @@
 using System;
-using API.DTOs;
 using Application.Activities.Enum;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-
+using Application.DTOs;
 namespace API.Controllers;
 
 public class AccountController(

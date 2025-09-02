@@ -1,8 +1,8 @@
 
 using API.Extensions;
 using API.Middleware;
-using Application.Core;
 using Domain;
+using Infrastructure.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -39,6 +39,13 @@ builder.Services.AddIdentityApiEndpoints<User>(options =>
 }).AddRoles<Role>()
 .AddEntityFrameworkStores<AppDbContext>();
 
+ builder.Services.AddAuthorizationBuilder()
+     .AddPolicy("IsActiviyHost", policy =>
+                {
+                    policy.Requirements.Add(new IsHostRequirement());
+                });
+
+builder.Services.AddTransient<IAuthorizationHandler, IsHosrRequirementHandler>();
 var app = builder.Build();
 app.UseMiddleware<ExceptionMiddleware>();
 
@@ -62,8 +69,9 @@ try
 {
     var context = servives.GetRequiredService<AppDbContext>();
     var userManager = servives.GetRequiredService<UserManager<User>>();
+    var roleManager = servives.GetRequiredService<RoleManager<Role>>();
     await context.Database.MigrateAsync();
-    await DbInitilizer.SeedData(context,userManager);
+    await DbInitilizer.SeedData(context, userManager,roleManager);
 }
 catch (Exception ex)
 {
