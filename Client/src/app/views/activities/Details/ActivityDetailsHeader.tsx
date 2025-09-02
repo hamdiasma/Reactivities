@@ -16,7 +16,7 @@ export default function ActivityDetailsHeader({ activity }: IProps) {
     const isGoing = activity.isGoing;
 
     const handleSubmit = () => {
-        editAttendance.mutate(activity.id)
+      editAttendance.mutate(activity.id)
     }
 
 

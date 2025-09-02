@@ -18,7 +18,7 @@ function ActivityDetailsPage() {
             <Grid size={8}>
                 <ActivityDetailsHeader activity={activity}/>
                 <ActivityDetailsInfo  activity={activity}/>
-                <ActivityDetailsChats  activity={activity}/>
+                <ActivityDetailsChats  />
             </Grid>
             <Grid size={4}>
                 <ActivityDetailsSideBar  activity={activity}/>

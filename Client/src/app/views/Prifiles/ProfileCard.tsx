@@ -3,7 +3,7 @@ import { Box, Card, CardContent, CardMedia, Chip, Divider, Typography } from "@m
 import { Link } from "react-router"
 
 type Props = {
-    profile: IUser
+    profile: IProfile
 }
 export default function ProfileCard({ profile }: Props) {
     const following: boolean = false

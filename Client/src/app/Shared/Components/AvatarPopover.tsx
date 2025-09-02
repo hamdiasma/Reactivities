@@ -6,7 +6,7 @@ import ProfileCard from '../../views/Prifiles/ProfileCard';
 
 
 type Props = {
-    profile: IUser
+    profile: IProfile
 }
 
 export default function AvatarPopover({ profile }: Props) {
