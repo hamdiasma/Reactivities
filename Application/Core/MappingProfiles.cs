@@ -1,8 +1,10 @@
 using System;
 using Application.Activities.DTOs;
-using Application.Activities.Profiles.DTOs;
+using Application.Profiles.DTOs;
+using Application.DTOs;
 using AutoMapper;
 using Domain;
+using Humanizer;
 
 namespace Application.Core;
 
@@ -21,5 +23,6 @@ public class MappingProfiles : Profile
          .ForMember(d => d.Bio, o => o.MapFrom(s => s.User.Bio))
          .ForMember(d => d.ImageUrl, o => o.MapFrom(s => s.User.ImageUrl))
          .ForMember(d => d.Id, o => o.MapFrom(s => s.User.Id));
+        CreateMap<User, UserProfile>(); //to user => To userProfile
     }
 }

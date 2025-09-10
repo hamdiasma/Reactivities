@@ -9,4 +9,6 @@ public class User : IdentityUser
     public string ImageUrl { get; set; } = string.Empty;
     //nav proprieties
     public ICollection<ActivityAttendee> Activities { get; set; } = []; //many to many
+
+    public ICollection<Photo> Photos { get; set; } = []; //many to many
 }

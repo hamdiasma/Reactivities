@@ -60,7 +60,6 @@ public class AccountController(
         if (user == null) return Unauthorized();
         var roles = await userManager.GetRolesAsync(user);
 
-
         return Ok(new
         {
             user.Email,

@@ -6,8 +6,9 @@ namespace Persistence.Application;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<User, Role, string>(options)
 {
-    public virtual DbSet<Activity> Activities { get; set; }
+    public required virtual DbSet<Activity> Activities { get; set; }
     public required virtual DbSet<ActivityAttendee> ActivityAttendees { get; set; }
+    public required virtual DbSet<Photo> Photos { get; set; }
     
     // use relations
     protected override void OnModelCreating(ModelBuilder builder)
@@ -27,6 +28,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
         .HasOne(x => x.Activity)
         .WithMany(x => x.Attendees)
         .HasForeignKey(x => x.ActivityId);
+        
     }
 }
 

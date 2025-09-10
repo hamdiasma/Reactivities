@@ -1,7 +1,9 @@
 
 using API.Extensions;
 using API.Middleware;
+using Application.Interfaces;
 using Domain;
+using Infrastructure.Photos;
 using Infrastructure.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -32,6 +34,8 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 
 
 builder.Services.AddTransient<ExceptionMiddleware>();
+builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
+builder.Services.AddScoped<IPhotoService, PhotoServices>();
 
 builder.Services.AddIdentityApiEndpoints<User>(options =>
 {
