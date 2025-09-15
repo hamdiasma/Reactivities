@@ -123,7 +123,7 @@ export const ActivityForm = (props: IProps) => {
                         </Grid>
                         <LocationInput control={control} name="location" label="Enter the location" />
                         <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2, gap: 2 }}>
-                            <Button  color="inherit" onClick={() => navigate(`/activities/${id}`)}>Cancel</Button>
+                            <Button  color="inherit" onClick={() => navigate(id ?`/activities/${id}`:`/activities`)}>Cancel</Button>
                             <Button
                                 type="submit"
                                 variant="contained"

@@ -34,11 +34,23 @@ namespace API.Controllers
         {
             return HandleResult(await Mediator.Send(new SetMainPhoto.Command { PhotoId = photoId }));
         }
-        
+
         [HttpGet("{userId}")]
         public async Task<ActionResult<UserProfile>> GetProfile(string userId)
         {
-            return HandleResult(await Mediator.Send(new GetProfile.Query { UserId  = userId}));
+            return HandleResult(await Mediator.Send(new GetProfile.Query { UserId = userId }));
+        }
+
+
+        [HttpPut("updateInfo")]
+        public async Task<ActionResult> UpdateProfile(EditProfileRequestDTO profile)
+        {
+   
+            return HandleResult(await Mediator.Send(new UpdateProfileInfo.Command
+            {
+                DisplayName = profile.DisplayName,
+                Bio = profile.Bio
+            }));
         }
     }
 }

@@ -6,9 +6,8 @@ interface Props {
 }
 
 export default function ProfileHeader({ profile }: Props) {
-    const isFollowing = true
+    const isFollowing = false
     const theme = useTheme();
-
     const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
     return (
@@ -45,7 +44,7 @@ export default function ProfileHeader({ profile }: Props) {
                             </Box>
                         </Box>
                         <Divider sx={{ width: '100%' }} />
-                        <Button variant="outlined" color={isFollowing ? 'error' : 'success'} fullWidth>
+                        <Button variant="outlined" color={isFollowing ? 'error' : 'success'} sx={{ width: 150 }}>
                             {isFollowing ? 'Unfollow' : 'Follow'}
                         </Button>
                     </Stack>

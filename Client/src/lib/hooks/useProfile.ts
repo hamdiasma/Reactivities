@@ -97,10 +97,39 @@ export const useProfile = (id?: string) => {
             )
         }
     })
-
-    const isCurrentUser = useMemo(() => {
-        return id === queryClient.getQueryData<IUser>(['user'])?.id
-    }, [id, queryClient])
-
-    return { profile, loadingProfile, photos, loadingPhotos, isCurrentUser, uploadPhoto, selectMainPhoto, deleteProfilePhoto }
+    
+    
+    const updateProfile = useMutation({
+        mutationFn: async (profile: Partial<IProfile>) => {
+            await agent.put('/Profiles/updateInfo', profile)
+        },
+        onSuccess:(_,profile:Partial<IProfile> )=>{
+             queryClient.setQueryData(['profile', id],
+                (profileData: IProfile) => {
+                    if (!profileData) return;
+                    return {
+                        ...profileData,
+                        displayName:profile.displayName,
+                        bio:profile?.bio,
+                    }
+                }
+            );
+            queryClient.setQueryData(['user'],
+                (profileData: IProfile) => {
+                    if (!profileData) return;
+                    return {
+                        ...profileData,
+                        displayName:profile.displayName,
+                        bio:profile?.bio,
+                    }
+                }
+            )
+        }
+    })
+    
+        const isCurrentUser = useMemo(() => {
+            return id === queryClient.getQueryData<IUser>(['user'])?.id
+        }, [id, queryClient])
+    
+    return { profile, loadingProfile, photos, loadingPhotos, isCurrentUser, uploadPhoto, selectMainPhoto, deleteProfilePhoto, updateProfile }
 }
