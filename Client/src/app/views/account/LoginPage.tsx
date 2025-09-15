@@ -5,23 +5,18 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Box, Button, CircularProgress, Paper, Typography } from '@mui/material'
 import { LockOpen } from '@mui/icons-material'
 import TextInput from '../../Shared/Components/TextInput'
-import { Link, useLocation, useNavigate } from 'react-router'
+import { Link} from 'react-router'
 
 export default function LoginPage() {
-    const navigate = useNavigate()
-    const location = useLocation()
 
     const { loginUser } = useAccount()
     const { control, handleSubmit, formState: { isValid, isSubmitting } } = useForm<LoginSchema>({
         mode: 'onTouched',
         resolver: zodResolver(loginSchema)
     })
-    const onSubmit = async (data: LoginSchema) => {
-        await loginUser.mutateAsync(data, {
-            onSuccess: async () => {
-                await navigate(location.state?.from || '/activities')
-            }
-        });
+
+    const onSubmit =  (data: LoginSchema) => {
+         loginUser.mutate(data);
     }
 
     return (
@@ -46,7 +41,7 @@ export default function LoginPage() {
                 {isSubmitting ? <CircularProgress /> : 'Login'}
             </Button>
             <Typography sx={{ textAlign: 'center' }} >
-                Don't have an account <Typography sx={{ml:2}} component={Link} to={'/register'}>Sign up</Typography>
+                Don't have an account <Typography sx={{ ml: 2 }} component={Link} to={'/register'}>Sign up</Typography>
             </Typography>
         </Paper>
     )

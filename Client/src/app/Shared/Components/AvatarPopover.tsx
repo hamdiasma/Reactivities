@@ -2,7 +2,7 @@ import * as React from 'react';
 import Popover from '@mui/material/Popover';
 import { Link } from 'react-router';
 import { Avatar } from '@mui/material';
-import ProfileCard from '../../views/Prifiles/ProfileCard';
+import ProfileCard from '../../views/Profiles/ProfileCard';
 
 
 type Props = {

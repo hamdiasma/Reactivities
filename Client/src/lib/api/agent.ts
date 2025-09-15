@@ -24,16 +24,6 @@ agent.interceptors.response.use(
         await sleep(1000); // Simulate network delay
         store.uiStore.isIdle()
         return response;
-        // try {
-        //     // Handle successful response
-
-        // } catch (error) {
-        //     // toast.error()
-        //     console.error("Error in response interceptor:", error);
-        //     return Promise.reject(error);
-        // } finally{
-
-        // }
     },
   async error=>{
      await sleep(1000); // Simulate network delay

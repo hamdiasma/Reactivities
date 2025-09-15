@@ -15,7 +15,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import { Button, Container, CssBaseline, Divider, LinearProgress, ListItemIcon, ListItemText } from '@mui/material';
+import { Avatar, Button, Container, CssBaseline, Divider, LinearProgress, ListItemIcon, ListItemText } from '@mui/material';
 import { Link, NavLink } from 'react-router';
 import MenueItemLink from '../Shared/Components/MenueItemLink';
 import { useStore } from '../../lib/hooks/useStore';
@@ -130,7 +130,7 @@ export default function NavBar() {
                 </ListItemIcon>
                 <ListItemText>New activtiy</ListItemText>
             </MenuItem>
-            <MenuItem component={Link} to='/profile' onClick={handleMenuClose}>
+            <MenuItem component={Link} to={`/profiles/${currentUser?.id}`} onClick={handleMenuClose}>
                 <ListItemIcon>
                     <PersonIcon />
                 </ListItemIcon>
@@ -285,7 +285,7 @@ export default function NavBar() {
                                         color="inherit"
                                         sx={{ display: 'flex', alignItems: 'center' }}
                                     >
-                                        <AccountCircle /> <Typography variant='body2' ml={'3px'} p={0} pt={'4px'}>{currentUser.displayName}!</Typography>
+                                        <Avatar src={currentUser?.imageUrl} sx={{width:30, height:30, mr:1}} /> <Typography variant='body2' ml={'3px'} p={0} pt={'4px'}>{currentUser.displayName}!</Typography>
                                     </IconButton>
                                 ) :
                                     <Box display={'flex'} alignItems={'center'}>

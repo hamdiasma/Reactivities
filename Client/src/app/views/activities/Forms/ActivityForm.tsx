@@ -19,6 +19,7 @@ export const ActivityForm = (props: IProps) => {
         handleSubmit,
         control,
         reset,
+        setError
     } = useForm<ActivitySchema>({
         mode: 'onTouched',
         resolver: zodResolver(activitySchema)
@@ -52,7 +53,16 @@ export const ActivityForm = (props: IProps) => {
             })
         }else{
             createActvity.mutate(flattenedData,{
-                onSuccess:(id)=>navigate(`/activities/${id}`)
+                onSuccess:(id)=>navigate(`/activities/${id}`),
+                onError: (error) => {
+                if (Array.isArray(error)) {
+                    console.log({error});
+                    
+                    error.forEach(err => {
+                        if (err.includes('Date')) setError('date', {message:err})
+                    })
+                }
+            }
             })
         }
        } catch (error) {

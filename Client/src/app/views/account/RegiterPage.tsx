@@ -20,7 +20,7 @@ export default function RegisterPage() {
             onError: (error) => {
                 if (Array.isArray(error)) {
                     error.forEach(err => {
-                        if (err.includes('Layane')) setError('email', {message:err})
+                        if (err.includes('Email')) setError('email', {message:err})
                         if (err.includes('Password'))setError('password', {message:err})
                     })
                 }

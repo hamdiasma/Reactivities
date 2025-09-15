@@ -15,12 +15,21 @@ interface IActivity {
   numberOfParicipate: number,
   hostDisplayName: string,
   hostId: string,
+  hostImageUrl?: string
 }
 
-interface IProfile{
- id: string
+interface IPhoto {
+  id: string,
+  url: string,
+  publicId: string,
+  userId: string
+}
+
+interface IProfile {
+  id: string
   imageUrl?: string
-  displayName: string
+  displayName: string,
+  bio?: string
 }
 
 interface IUser extends IProfile {

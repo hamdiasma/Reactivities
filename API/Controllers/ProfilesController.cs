@@ -18,7 +18,7 @@ namespace API.Controllers
         }
 
         [HttpGet("{userId}/photos")]
-        public async Task<ActionResult<List<Photo>>> GettPhoto(string userId)
+        public async Task<ActionResult<List<Photo>>> GetPhoto(string userId)
         {
             return HandleResult(await Mediator.Send(new GetPofilePhotos.Query { UserId = userId }));
         }
@@ -29,13 +29,12 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new DeletePhoto.Command { PhotoId = photoId }));
         }
 
-        [HttpPut("{photoId}/photo")]
+        [HttpPut("{photoId}/setMain")]
         public async Task<ActionResult> UpdateProfilePhoto(string photoId)
         {
             return HandleResult(await Mediator.Send(new SetMainPhoto.Command { PhotoId = photoId }));
         }
         
-
         [HttpGet("{userId}")]
         public async Task<ActionResult<UserProfile>> GetProfile(string userId)
         {

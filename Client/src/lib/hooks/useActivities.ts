@@ -23,10 +23,13 @@ export const useActivities = (id?: string) => {
         staleTime: 1000 * 60 * 1,
         select: data => {
             return data.map(activity => {
+                 const host = activity.attendees.find(x => x.id === activity.hostId)
                 return {
                     ...activity,
                     isHost: (currentUser?.id === activity.hostId) as boolean,
-                    isGoing: activity.attendees.some(x => x.id === currentUser?.id)
+                    isGoing: activity.attendees.some(x => x.id === currentUser?.id),
+                    hostImageUrl: host?.imageUrl
+
                 }
             })
         }
@@ -40,17 +43,20 @@ export const useActivities = (id?: string) => {
         },
         enabled: !!id && !!currentUser, // only run this query if id is defined
         select: data => {
+             const host = data.attendees.find(x => x.id === data.hostId)
+
             return {
                 ...data,
                 isGoing: data.attendees.some(x => x.id === currentUser?.id),
-                isHost: (data.hostId === currentUser?.id) as boolean
+                isHost: (data.hostId === currentUser?.id) as boolean,
+                hostImageUrl: host?.imageUrl
             }
         }
     })
 
     const updateActvity = useMutation({
         mutationFn: async (activity: IActivity) => {
-            await agent.put<IActivity>(`/activities`, activity);
+            await agent.put<IActivity>(`/activities/${activity.id}`, activity);
         },
         onSuccess: async () => {
             queryClient.invalidateQueries({ queryKey: ['activities'] });  // to appel  activities
