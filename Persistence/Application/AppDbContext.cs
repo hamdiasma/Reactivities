@@ -9,6 +9,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public required virtual DbSet<Activity> Activities { get; set; }
     public required virtual DbSet<ActivityAttendee> ActivityAttendees { get; set; }
     public required virtual DbSet<Photo> Photos { get; set; }
+    public required virtual DbSet<Comment> Comments { get; set; }
     
     // use relations
     protected override void OnModelCreating(ModelBuilder builder)
