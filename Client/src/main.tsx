@@ -18,7 +18,6 @@ const queryClient = new QueryClient()
 
 
 createRoot(document.getElementById('root')!).render(
-
   <StrictMode>
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <StoreContext.Provider value={store}>

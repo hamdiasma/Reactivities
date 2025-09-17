@@ -1,6 +1,7 @@
 
 using API.Extensions;
 using API.Middleware;
+using API.SignalR;
 using Application.Interfaces;
 using Domain;
 using Infrastructure.Photos;
@@ -50,6 +51,7 @@ builder.Services.AddIdentityApiEndpoints<User>(options =>
                 });
 
 builder.Services.AddTransient<IAuthorizationHandler, IsHosrRequirementHandler>();
+
 var app = builder.Build();
 app.UseMiddleware<ExceptionMiddleware>();
 
@@ -67,6 +69,8 @@ app.UseAuthorization();
 app.UseCors();
 app.MapControllers();
 app.MapGroup("api").MapIdentityApi<User>();
+app.MapHub<CommentHub>("/comments"); // signalR endpoint
+
 using var scope = app.Services.CreateScope();
 var servives = scope.ServiceProvider;
 try

@@ -16,7 +16,7 @@ export default class CounterStore {
     makeAutoObservable(this)
    }
 
-   setIncrement(amount =1){
+   setIncrement(amount =1){ 
     this.count +=amount;
     this.events.push(`Increment by ${amount} now  count is ${this.count}` )
    }

@@ -35,7 +35,6 @@ export const useProfile = (id?: string) => {
             queryClient.invalidateQueries({ queryKey: ['photos', id] })
             queryClient.setQueryData(['user'],
                 (data: IUser) => {
-                    console.log({data});
                     if (!data) return;
                     return {
                         ...data,

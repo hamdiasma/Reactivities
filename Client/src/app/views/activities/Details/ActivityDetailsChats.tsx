@@ -1,8 +1,38 @@
-import { Box, Typography, Card, CardContent, TextField, Avatar } from "@mui/material";
-import { Link } from "react-router";
+import { Box, Typography, Card, CardContent, TextField, CircularProgress, IconButton, useMediaQuery } from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
+import { useParams } from "react-router";
+import { useComments } from "../../../../lib/hooks/useComments";
+import { useForm, type FieldValues } from "react-hook-form";
+import { observer } from "mobx-react-lite";
+import ActivityDetailsComment from "./ActivityDetailsComment";
 
-export default function ActivityDetailsChats() {
-    
+const ActivityDetailsChats = observer(function ActivityDetailsChats() {
+    const { id } = useParams<{ id: string }>()
+    const { commentStore } = useComments(id);
+    const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm()
+    const isMobile = useMediaQuery('(max-width:600px)');
+
+    const addComment = async (data: FieldValues) => {
+
+        try {
+            await commentStore.hubConnection?.invoke('SendComment', {
+                activityId: id,
+                body: data.body // le champ du formulaire est "comment"
+            }) // SendComment in signalR server
+            reset()
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
+    const handelKeyPress = (e: React.KeyboardEvent<HTMLDivElement>) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSubmit(addComment)()
+        }
+    }
+
     return (
         <>
             <Box
@@ -20,34 +50,40 @@ export default function ActivityDetailsChats() {
                     <div>
                         <form>
                             <TextField
+                                {...register('body', { required: true })}
                                 variant="outlined"
                                 fullWidth
                                 multiline
-                                rows={2}
-                                placeholder="Enter your comment (Enter to submit, SHIFT + Enter for new line)"
+                                placeholder={isMobile
+                                    ? "Type your comment"
+                                    : "Enter your comment (Enter to submit, SHIFT + Enter for new line)"
+                                }
+                                onKeyDown={handelKeyPress}
+                                slotProps={{
+                                    input: {
+                                        endAdornment: isSubmitting ? <CircularProgress /> : (
+                                            <IconButton type="submit" edge="end" sx={{ mr: 2 }} size="medium">
+                                                <SendIcon color="primary"  onClick={handleSubmit(addComment)} />
+                                            </IconButton>
+                                        )
+                                    }
+                                }}
                             />
                         </form>
                     </div>
 
-                    <Box>
-                        <Box sx={{ display: 'flex', my: 2 }}>
-                            <Avatar src={'/images/user.png'} alt={'user image'} sx={{ mr: 2 }} />
-                            <Box display='flex' flexDirection='column'>
-                                <Box display='flex' alignItems='center' gap={3}>
-                                    <Typography component={Link} to={`/profiles/username`} variant="subtitle1" sx={{ fontWeight: 'bold', textDecoration: 'none' }}>
-                                        Bob
-                                    </Typography>
-                                    <Typography variant="body2" color="textSecondary">
-                                        2 hours ago
-                                    </Typography>
-                                </Box>
+                    <Box sx={{ width: "100%", height: 400, overflowY: 'auto', mt: 2 }}>
+                        {
+                            commentStore.comments.map(comment => (
+                                <ActivityDetailsComment key={comment.id} comment={comment} commentStore={commentStore}/>
+                            ))
+                        }
 
-                                <Typography sx={{ whiteSpace: 'pre-wrap' }}>Comment goes here</Typography>
-                            </Box>
-                        </Box>
+
                     </Box>
                 </CardContent>
             </Card>
         </>
     )
-}
+})
+export default ActivityDetailsChats

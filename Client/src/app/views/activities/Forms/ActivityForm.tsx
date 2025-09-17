@@ -56,7 +56,7 @@ export const ActivityForm = (props: IProps) => {
                 onSuccess:(id)=>navigate(`/activities/${id}`),
                 onError: (error) => {
                 if (Array.isArray(error)) {
-                    console.log({error});
+                    console.log(error);
                     
                     error.forEach(err => {
                         if (err.includes('Date')) setError('date', {message:err})

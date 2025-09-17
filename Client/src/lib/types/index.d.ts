@@ -18,6 +18,24 @@ interface IActivity {
   hostImageUrl?: string
 }
 
+interface CommentStore {
+  comments: ChatComment[];
+  hubConnection: HubConnection | null;
+  createHubConnection: (activityId?: string) => void;
+  stopHubConnection: () => void;
+}
+
+interface ChatComment{
+  id: string,
+  createdAt: Date,
+  updateAt:Date
+  body: string,
+  userId: string,
+  activityId: string,
+  displayName: string,
+  imageUrl?: string
+}
+
 interface IPhoto {
   id: string,
   url: string,

@@ -44,6 +44,10 @@ namespace API.Extensions
                         .AllowAnyMethod(); // Autorise toutes les méthodes HTTP (sécurité plus faible si activée)
                 })
             );
+            // ------------------------- signalR -------------------------
+            services.AddSignalR();
+            // -------------------------    -------------------- 
+
 
             services.AddMediatR(x =>
             {
