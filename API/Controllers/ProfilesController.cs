@@ -45,11 +45,30 @@ namespace API.Controllers
         [HttpPut("updateInfo")]
         public async Task<ActionResult> UpdateProfile(EditProfileRequestDTO profile)
         {
-   
+
             return HandleResult(await Mediator.Send(new UpdateProfileInfo.Command
             {
                 DisplayName = profile.DisplayName,
                 Bio = profile.Bio
+            }));
+        }
+
+        [HttpPost("{userId}/follow")]
+        public async Task<ActionResult> FollowToggle(string userId)
+        {
+            return HandleResult(await Mediator.Send(new FollowToggle.Cammand
+            {
+                FolloweeUserId = userId
+            }));
+        }
+
+        [HttpGet("{userId}/follow-list")]
+        public async Task<ActionResult> GetFollowings(string userId, string predicate)
+        {
+            return HandleResult(await Mediator.Send(new GetFollowings.Query
+            {
+                UserId = userId,
+                Predicate = predicate
             }));
         }
     }

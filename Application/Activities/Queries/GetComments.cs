@@ -26,7 +26,6 @@ public class GetComments
             .OrderByDescending(x => x.CreatedAt)
             .ProjectTo<CommentDTO>(mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
-            
             return Result<List<CommentDTO>>.Success(comments);
 
         }

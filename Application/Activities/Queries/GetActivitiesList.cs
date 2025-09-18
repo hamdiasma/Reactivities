@@ -1,6 +1,7 @@
 
 
 using Application.Activities.DTOs;
+using Application.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain;
@@ -13,15 +14,20 @@ namespace Application.Activities.Queries;
 
 public class GetActivitiesList
 {
-    public class Query : IRequest<List<ActivityDTO>> {};
-    public class Handler(AppDbContext dbContext, ILogger<GetActivitiesList> logger, IMapper mapper) : IRequestHandler<Query, List<ActivityDTO>>
+    public class Query : IRequest<List<ActivityDTO>> { };
+    public class Handler(AppDbContext dbContext, ILogger<GetActivitiesList> logger, IUserAccessor userAccessor, IMapper mapper) : IRequestHandler<Query, List<ActivityDTO>>
     {
         public async Task<List<ActivityDTO>> Handle(Query request, CancellationToken cancellationToken)
         {
-           logger.LogInformation($"Processing activity list request at {DateTime.UtcNow}");
+            //    logger.LogInformation($"Processing activity list request at {DateTime.UtcNow}");
             return await dbContext.Activities
-            .ProjectTo<ActivityDTO>(mapper.ConfigurationProvider)
-            .OrderByDescending(x=>x.Date).ToListAsync(cancellationToken);
+            .ProjectTo<ActivityDTO>(mapper.ConfigurationProvider,
+             new
+             {
+                 currentUserId = userAccessor.GetUserId()
+             }
+            )
+            .OrderByDescending(x => x.Date).ToListAsync(cancellationToken);
         }
     }
 }

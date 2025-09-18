@@ -2,7 +2,8 @@ import { Box, Paper, Tab, Tabs, useMediaQuery, useTheme } from "@mui/material";
 import { useState } from "react";
 import ProfilePhotos from "./ProfilePhotos";
 import ProfileAbout from "./ProfileAbout";
-
+import ProfileFollowings from "./ProfileFollowings";
+import {Predicate, type PredicateType} from '../../../lib/contantes/constants'
 export default function ProfileContent() {
   const [value, setValue] = useState(0);
   const theme = useTheme();
@@ -12,8 +13,8 @@ export default function ProfileContent() {
     { label: "About", content: <ProfileAbout/> },
     { label: "Photos", content: <ProfilePhotos/> },
     { label: "Events", content: <div>Events</div> },
-    { label: "Followers", content: <div>Followers</div> },
-    { label: "Following", content: <div>Following</div> },
+    { label: "Followers", content:  <ProfileFollowings key={'FOLLOWERS'} predicate={Predicate.FOLLOWERS as PredicateType}/> },
+    { label: "Following", content:  <ProfileFollowings key={'FOLLOWINGS'} predicate={Predicate.FOLLOWINGS as PredicateType}/> },
   ];
 
   const handleChange = (_: React.SyntheticEvent, newValue: number) => {

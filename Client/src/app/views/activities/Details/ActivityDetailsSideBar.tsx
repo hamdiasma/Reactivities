@@ -6,7 +6,6 @@ interface Props {
 }
 
 export default function ActivityDetailsSideBar({ activity }: Props) {
-    const following = true;
     const hostId = activity.hostId;
     return (
         <>
@@ -40,7 +39,7 @@ export default function ActivityDetailsSideBar({ activity }: Props) {
                                     </ListItemAvatar>
                                     <ListItemText>
                                         <Typography variant="h6">{att.displayName}</Typography>
-                                        {following && (
+                                        {att.following && (
                                             <Typography variant="body2" color="orange">
                                                 Following
                                             </Typography>

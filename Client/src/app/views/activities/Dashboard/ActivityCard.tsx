@@ -65,6 +65,7 @@ const ActivityCard = ({ activity }: IProps) => {
           <AvatarGroup max={4}>
             {activity.attendees.map(att =>
               <AvatarPopover
+              
                 key={att.id}
                 profile={att}
               />

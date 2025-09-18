@@ -42,16 +42,19 @@ public class DbInitilizer
         var users = new List<User>()
           {
             new(){
+                Id ="id-01",
                 DisplayName="Hamdi",
                 UserName="hamdi.babdelhafidh@gmail.com",
                 Email="hamdi.babdelhafidh@gmail.com",
             },
             new(){
+                Id ="id-02",
                 DisplayName="Achek",
                 UserName="kapunain2009@gmail.com",
                 Email="kapunain2009@gmail.com",
             },
             new(){
+                Id ="id-03",
                 DisplayName="Ben",
                 UserName="hamdi.achek9.11.1987@gmail.com",
                 Email="hamdi.achek9.11.1987@gmail.com"

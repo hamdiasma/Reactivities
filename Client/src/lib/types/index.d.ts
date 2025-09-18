@@ -25,10 +25,10 @@ interface CommentStore {
   stopHubConnection: () => void;
 }
 
-interface ChatComment{
+interface ChatComment {
   id: string,
   createdAt: Date,
-  updateAt:Date
+  updateAt: Date
   body: string,
   userId: string,
   activityId: string,
@@ -48,7 +48,12 @@ interface IProfile {
   imageUrl?: string
   displayName: string,
   bio?: string
+  following?: boolean,
+  followerSCount?: number,
+  FollowingSCount?: number,
 }
+
+
 
 interface IUser extends IProfile {
   email: string

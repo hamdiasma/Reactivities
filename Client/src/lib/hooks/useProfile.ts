@@ -1,8 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import agent from "../api/agent";
 import { useMemo } from "react";
+import { type PredicateType } from "../contantes/constants";
 
-export const useProfile = (id?: string) => {
+export const useProfile = (id?: string, predicate?:PredicateType) => {
 
     const queryClient = useQueryClient();
 
@@ -12,7 +13,7 @@ export const useProfile = (id?: string) => {
             const response = await agent.get<IProfile>(`/Profiles/${id}`);
             return response.data;
         },
-        enabled: !!id
+        enabled: !!id && !predicate
     })
 
     const { data: photos, isLoading: loadingPhotos } = useQuery<IPhoto[]>({
@@ -21,7 +22,16 @@ export const useProfile = (id?: string) => {
             const response = await agent.get<IPhoto[]>(`/Profiles/${id}/photos`);
             return response.data;
         },
-        enabled: !!id
+        enabled: !!id && !predicate
+    })
+
+    const { data: followigns, isLoading: loadingFollowings } = useQuery<IProfile[]>({
+        queryKey: ['followings', id, predicate],
+        queryFn: async () => {
+            const response = await agent.get<IProfile[]>(`/Profiles/${id}/follow-list?predicate=${predicate}`);
+            return response.data;
+        },
+        enabled: !!id && !!predicate
     })
 
     const uploadPhoto = useMutation({
@@ -38,7 +48,7 @@ export const useProfile = (id?: string) => {
                     if (!data) return;
                     return {
                         ...data,
-                        imageUrl: (data.imageUrl ==="") ? photo.url : data.imageUrl
+                        imageUrl: (data.imageUrl === "") ? photo.url : data.imageUrl
                     }
                 }
             )
@@ -48,7 +58,7 @@ export const useProfile = (id?: string) => {
                     if (!data) return;
                     return {
                         ...data,
-                        imageUrl: (data.imageUrl ==="") ? photo.url : data.imageUrl
+                        imageUrl: (data.imageUrl === "") ? photo.url : data.imageUrl
                     }
                 }
             )
@@ -62,7 +72,7 @@ export const useProfile = (id?: string) => {
         },
         onSuccess: (_, photo: IPhoto) => {
             // queryClient.invalidateQueries({ queryKey: ['photos', id] })
-            queryClient.setQueryData( ['user'],
+            queryClient.setQueryData(['user'],
                 (userData: IUser) => {
                     if (!userData) return;
                     return {
@@ -71,7 +81,7 @@ export const useProfile = (id?: string) => {
                     }
                 }
             );
-            queryClient.setQueryData( ['profile', id],
+            queryClient.setQueryData(['profile', id],
                 (profileData: IProfile) => {
                     if (!profileData) return;
                     return {
@@ -87,7 +97,7 @@ export const useProfile = (id?: string) => {
         mutationFn: async (photoId: string) => {
             await agent.delete(`/Profiles/${photoId}/photo`);
         },
-        onSuccess: (_,photoId) => {
+        onSuccess: (_, photoId) => {
             queryClient.setQueryData(['photos', id],
                 (photosData: IPhoto[] | undefined) => {
                     if (!photosData) return;
@@ -96,20 +106,20 @@ export const useProfile = (id?: string) => {
             )
         }
     })
-    
-    
+
+
     const updateProfile = useMutation({
         mutationFn: async (profile: Partial<IProfile>) => {
             await agent.put('/Profiles/updateInfo', profile)
         },
-        onSuccess:(_,profile:Partial<IProfile> )=>{
-             queryClient.setQueryData(['profile', id],
+        onSuccess: (_, profile: Partial<IProfile>) => {
+            queryClient.setQueryData(['profile', id],
                 (profileData: IProfile) => {
                     if (!profileData) return;
                     return {
                         ...profileData,
-                        displayName:profile.displayName,
-                        bio:profile?.bio,
+                        displayName: profile.displayName,
+                        bio: profile?.bio,
                     }
                 }
             );
@@ -118,17 +128,50 @@ export const useProfile = (id?: string) => {
                     if (!profileData) return;
                     return {
                         ...profileData,
-                        displayName:profile.displayName,
-                        bio:profile?.bio,
+                        displayName: profile.displayName,
+                        bio: profile?.bio,
                     }
                 }
             )
         }
     })
-    
-        const isCurrentUser = useMemo(() => {
-            return id === queryClient.getQueryData<IUser>(['user'])?.id
-        }, [id, queryClient])
-    
-    return { profile, loadingProfile, photos, loadingPhotos, isCurrentUser, uploadPhoto, selectMainPhoto, deleteProfilePhoto, updateProfile }
+
+    const updateFollowing = useMutation({
+        mutationFn: async () => {
+            await agent.post(`/profiles/${id}/follow`)
+        },
+        onSuccess: () => {
+            queryClient.setQueryData(["profile", id], (profile: IProfile) => {
+
+                queryClient.invalidateQueries({queryKey:['followings', id, 'followers']})
+                if (!profile || profile.followerSCount === undefined) return profile;
+                return {
+                    ...profile,
+                    following: !profile.following,
+                    followerSCount: profile.following ? profile.followerSCount - 1 : profile.followerSCount + 1,
+                }
+            })
+        }
+
+    })
+
+
+    const isCurrentUser = useMemo(() => {
+        return id === queryClient.getQueryData<IUser>(['user'])?.id
+    }, [id, queryClient])
+
+    return {
+        profile,
+        loadingProfile,
+        photos,
+        loadingPhotos,
+        isCurrentUser,
+        uploadPhoto,
+        selectMainPhoto,
+        deleteProfilePhoto,
+        updateProfile,
+        updateFollowing,
+       followigns, 
+       loadingFollowings 
+    }
 }
