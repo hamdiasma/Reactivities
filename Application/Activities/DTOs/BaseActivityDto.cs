@@ -7,6 +7,7 @@ public class BaseActivityDto
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public DateTime Date { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public string Category { get; set; } = string.Empty;
     public bool IsCancelled { get; set; }
     // location

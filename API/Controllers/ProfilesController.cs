@@ -71,5 +71,16 @@ namespace API.Controllers
                 Predicate = predicate
             }));
         }
+
+         [HttpGet("{userId}/activities")]
+        public async Task<ActionResult> GetUserActivities(string userId, string filter)
+        {
+            return HandleResult(await Mediator.Send(new GetUserActivities.Query
+            {
+                UserId = userId,
+                Filter= filter
+            }));
+        }
+
     }
 }

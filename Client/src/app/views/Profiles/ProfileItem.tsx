@@ -8,11 +8,11 @@ import Typography from '@mui/material/Typography';
 import { Person } from '@mui/icons-material';
 import { Link } from 'react-router';
 
-interface IProps{
-  profile :IProfile
+interface IProps {
+  profile: IProfile
 }
 
-export default function ProfileItem({profile}:IProps) {
+export default function ProfileItem({ profile }: IProps) {
   return (
     <>
       <ListItem alignItems="flex-start">
@@ -25,11 +25,13 @@ export default function ProfileItem({profile}:IProps) {
             <React.Fragment>
               <Typography
                 component="span"
-                variant="body2"
-                sx={{ color: 'text.primary', display: 'flex',mt:1, alignItems:'flex-end' }}
+                variant="body1"
+                sx={{ color: 'text.primary', display: 'flex', mt: 1, alignItems: 'flex-end' }}
               >
-                    <Person />
-                    <Typography sx={{ ml: 1 }} variant="body2">{profile.followerSCount} Followers</Typography>
+                <Person />
+                <Typography component="span" sx={{ ml: 1 }} variant="body2">
+                  {profile.followerSCount} Followers
+                </Typography>
               </Typography>
             </React.Fragment>
           }

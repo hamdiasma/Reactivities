@@ -1,3 +1,9 @@
+type TPageList<T, TCursor>={
+  items : T[],
+  nextCursor:TCursor
+}
+
+
 interface IActivity {
   id: string;
   title: string;

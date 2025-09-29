@@ -10,6 +10,8 @@ public class ActivityDTO
     public required string Title { get; set; }
     public required string Description { get; set; }
     public required DateTime Date { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+       
     public required string Category { get; set; }
     public bool IsCancelled { get; set; }
     public int NumberOfParicipate { get; set; }

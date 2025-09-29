@@ -1,7 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import agent from "../api/agent";
 import { useLocation } from "react-router";
 import { useAccount } from "./useAccount";
+import { useStore } from "./useStore";
 
 
 // query function to fetch activities
@@ -9,30 +10,45 @@ import { useAccount } from "./useAccount";
 // mutation function to delete activities
 // mutation function to create activities
 export const useActivities = (id?: string) => {
+    const { activityStore: { filter, startDate } } = useStore()
+
     const queryClient = useQueryClient();
     const location = useLocation()
     const { currentUser } = useAccount()
-    const { data: activities, isPending, isFetching } = useQuery({
-        queryKey: ['activities'],
-        queryFn: async () => {
-            const response = await agent.get<IActivity[]>("/activities");
+
+    const { data: activitiesGroup, isPending, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } = useInfiniteQuery<TPageList<IActivity, string>>({
+        queryKey: ['activities', filter, startDate],
+        queryFn: async ({ pageParam = null }) => {
+            const response = await agent.get<TPageList<IActivity, string>>("/activities", {
+                params: {
+                    cursor: pageParam,
+                    pageSize: 10,
+                    filter,
+                    startDate
+                }
+            });
             return response.data;
         },
-        // staleTime:1000*60 * 6
+        staleTime: 1000 * 60 * 5,
+        initialPageParam: null,
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
+        placeholderData:keepPreviousData,
         enabled: !id && location.pathname === "/activities" && !!currentUser,
-        staleTime: 1000 * 60 * 1,
-        select: data => {
-            return data.map(activity => {
-                 const host = activity.attendees.find(x => x.id === activity.hostId)
-                return {
-                    ...activity,
-                    isHost: (currentUser?.id === activity.hostId) as boolean,
-                    isGoing: activity.attendees.some(x => x.id === currentUser?.id),
-                    hostImageUrl: host?.imageUrl
-
-                }
-            })
-        }
+        select: (data => ({
+            ...data,
+            pages: data.pages.map((page) => ({
+                ...page,
+                items: page.items.map(activity => {
+                    const host = activity.attendees.find(x => x.id === activity.hostId)
+                    return {
+                        ...activity,
+                        isHost: (currentUser?.id === activity.hostId) as boolean,
+                        isGoing: activity.attendees.some(x => x.id === currentUser?.id),
+                        hostImageUrl: host?.imageUrl
+                    }
+                })
+            }))
+        }))
     })
 
     const { data: activity, isLoading: isLoadinActivity } = useQuery({
@@ -43,7 +59,7 @@ export const useActivities = (id?: string) => {
         },
         enabled: !!id && !!currentUser, // only run this query if id is defined
         select: data => {
-             const host = data.attendees.find(x => x.id === data.hostId)
+            const host = data.attendees.find(x => x.id === data.hostId)
 
             return {
                 ...data,
@@ -93,7 +109,7 @@ export const useActivities = (id?: string) => {
             await queryClient.cancelQueries({ queryKey: queryKey })
             const preavActiviy = queryClient.getQueryData<IActivity>(queryKey)
 
-            queryClient.setQueryData<IActivity>(queryKey, (oldActvity)=> {
+            queryClient.setQueryData<IActivity>(queryKey, (oldActvity) => {
                 if (!oldActvity || !currentUser) {
                     return oldActvity
                 }
@@ -114,25 +130,28 @@ export const useActivities = (id?: string) => {
                         }]
                 }
             })
-        return {preavActiviy}
+            return { preavActiviy }
         },
-        onError:(error, activityId, context)=>{
+        onError: (_, activityId, context) => {
             const queryKey = ['activities', activityId]
-            if(context?.preavActiviy){
+            if (context?.preavActiviy) {
                 queryClient.setQueryData(queryKey, context.preavActiviy)
             }
-           
+
         }
     })
     return {
-        activities,
+        activitiesGroup,
         isPending,
         updateActvity,
         createActvity,
         deleteActvity,
         activity,
         isLoadinActivity,
-        isFetching,
-        editAttendance
+        isLoading,
+        isFetchingNextPage,
+        hasNextPage,
+        editAttendance,
+        fetchNextPage
     };
 }
