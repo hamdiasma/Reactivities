@@ -11,6 +11,7 @@ export default function StarButton({ selected }: Ipropd) {
         <Box sx={{ position: 'relative', zIndex: 100 }}>
             <Button
                 sx={{
+                    cursor: selected ? 'default'  : 'pointer',
                     background:'transparent',
                     transition: 'opacity 0.3s',
                     position: 'relative',

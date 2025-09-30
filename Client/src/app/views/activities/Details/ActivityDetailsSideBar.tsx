@@ -19,7 +19,7 @@ export default function ActivityDetailsSideBar({ activity }: Props) {
                 }}
             >
                 <Typography variant="h6">
-                    {activity.attendees.length} people going
+                    {activity.attendees.length} people going - <small style={{fontSize:12}}>(max:{activity.numberOfParicipate})</small>
                 </Typography>
             </Paper>
             <Paper sx={{ padding: 2 }}>

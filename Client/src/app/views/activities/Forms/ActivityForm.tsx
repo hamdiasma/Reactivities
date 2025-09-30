@@ -25,7 +25,6 @@ export const ActivityForm = (props: IProps) => {
         resolver: zodResolver(activitySchema)
     })
     const navigate = useNavigate()
-    // console.log( props);
     const { id } = useParams<{ id: string }>();
     const { updateActvity, createActvity, activity, isLoadinActivity } = useActivities(id);
 

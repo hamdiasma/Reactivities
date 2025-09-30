@@ -19,7 +19,8 @@ export default function ActivityDetailsHeader({ activity }: IProps) {
     const handleSubmit = () => {
        editAttendance.mutate(activity.id)
     }
-
+console.log({activity});
+// numberOfParicipate
 
     return (
         <Card sx={{ position: 'relative', mb: 2, backgroundColor: 'transparent', overflow: 'hidden' }}>
@@ -97,7 +98,7 @@ export default function ActivityDetailsHeader({ activity }: IProps) {
                             variant="contained"
                             color={isGoing ? 'primary' : 'info'}
                             onClick={handleSubmit}
-                            disabled={editAttendance.isPending || activity.isCancelled}
+                            disabled={editAttendance.isPending || activity.isCancelled ||( !isHost && !isGoing && (activity.numberOfParicipate === activity.attendees.length))}
                         >
                             {isGoing
                                 ? 'Cancel Attendance'

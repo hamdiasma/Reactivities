@@ -5,6 +5,7 @@ import { type PredicateType } from "../contantes/constants";
 
 export const useProfile = (id?: string, predicate?:PredicateType) => {
     const [filter, setFilter] = useState<string | null>(null);
+    const [page, setPage] = useState<number>(1);
 
     const queryClient = useQueryClient();
     const { data: profile, isLoading: loadingProfile } = useQuery<IProfile>({
@@ -36,11 +37,12 @@ export const useProfile = (id?: string, predicate?:PredicateType) => {
 
 
     const {data:userActivities, isLoading:loadingUserActivities} = useQuery({
-         queryKey:['user-activities', filter],
+         queryKey:['user-activities', filter, page],
          queryFn: async ()=>{
-            const response = await agent.get<IActivity[]>(`/profiles/${id}/activities`,{
+            const response = await agent.get<RootUserEvents>(`/profiles/${id}/activities`,{
                 params:{
-                    filter
+                    filter,
+                    PageNumber:page
                 }
             })
             return response.data
@@ -191,6 +193,8 @@ export const useProfile = (id?: string, predicate?:PredicateType) => {
        userActivities,
        loadingUserActivities,
        setFilter,
-       filter
+       filter,
+       setPage,
+       page
     }
 }

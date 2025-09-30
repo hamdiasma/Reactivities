@@ -3,7 +3,9 @@ import { Link, NavLink } from "react-router";
 import { AccessTime, Place } from "@mui/icons-material";
 import { format } from 'date-fns'
 import AvatarPopover from "../../../Shared/Components/AvatarPopover";
-
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 interface IProps {
   activity: IActivity;
 }
@@ -14,7 +16,10 @@ const ActivityCard = ({ activity }: IProps) => {
   const label = activity.isHost ? 'You are hosting' : 'You are going';
   const isCanceled = activity.isCancelled; // This should be replaced with actual logic to determine if the activity is canceled
   const color = isHost ? 'secondary' : isGoing ? 'warning' : 'default';
-
+  const isFull = activity.attendees.length === activity.numberOfParicipate;
+  const isAlmostFull =
+    activity.attendees.length >= activity.numberOfParicipate - 2 &&
+    !isFull;
   return (
     <Card elevation={3} sx={{ borderRadius: 3, marginBottom: 2 }}>
 
@@ -38,6 +43,42 @@ const ActivityCard = ({ activity }: IProps) => {
             Hosted by {' '} <Link to={`/profiles/${activity.hostId}`}>
               {activity.hostDisplayName}
             </Link>
+            <Chip
+              icon={
+                isFull ? (
+                  <CancelIcon fontSize="small" />
+                ) : isAlmostFull ? (
+                  <WarningAmberIcon fontSize="small" />
+                ) : (
+                  <CheckCircleIcon fontSize="small" />
+                )
+              }
+              label={
+                isFull
+                  ? `Participated: (${activity.attendees.length}) / ${activity.numberOfParicipate} – Liste pleine`
+                  : `Participated: (${activity.attendees.length}) / ${activity.numberOfParicipate}`
+              }
+              sx={{
+                mt:2,
+                display:"flex",
+                px: 1.5,
+                py: 0.5,
+                borderRadius: "8px",
+                fontWeight: 600,
+                fontSize: "0.8rem",
+               
+                color: isFull
+                  ? "error.main"
+                  : isAlmostFull
+                    ? "warning.main"
+                    : "success.main",
+                "& .MuiChip-icon": {
+                  color: "inherit", // make the icon match text color
+                },
+              }}
+            />
+
+
           </>}
         ></CardHeader>
         <Box display={'flex'} flexDirection={'column'} gap={2} mr={2}>
@@ -65,7 +106,7 @@ const ActivityCard = ({ activity }: IProps) => {
           <AvatarGroup max={4}>
             {activity.attendees.map(att =>
               <AvatarPopover
-              
+
                 key={att.id}
                 profile={att}
               />

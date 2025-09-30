@@ -72,13 +72,15 @@ namespace API.Controllers
             }));
         }
 
-         [HttpGet("{userId}/activities")]
-        public async Task<ActionResult> GetUserActivities(string userId, string filter)
+        [HttpGet("{userId}/activities")]
+        public async Task<ActionResult> GetUserActivities(string userId, string filter, int pageNumber, int pageSize=12 )
         {
             return HandleResult(await Mediator.Send(new GetUserActivities.Query
             {
                 UserId = userId,
-                Filter= filter
+                Filter = filter,
+                PageNumber = pageNumber,
+                PageSize = pageSize
             }));
         }
 

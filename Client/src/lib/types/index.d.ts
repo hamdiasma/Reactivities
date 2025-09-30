@@ -24,6 +24,14 @@ interface IActivity {
   hostImageUrl?: string
 }
 
+ interface RootUserEvents {
+  items: IActivity[]
+  totalCount: number
+  pageNumber: number
+  pageSize: number
+  totalPages: number
+}
+
 interface CommentStore {
   comments: ChatComment[];
   hubConnection: HubConnection | null;

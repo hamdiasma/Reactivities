@@ -59,7 +59,6 @@ export const useComments = (activityId?: string) => {
             })
 
             this.hubConnection.on('DeleteUserComment', (deletedComment?: string) => {
-                console.log({deletedComment});
                   if (!deletedComment) return;
                 runInAction(() => {
                     this.comments = this.comments.filter(c => c.id !== deletedComment)

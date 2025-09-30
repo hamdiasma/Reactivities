@@ -33,12 +33,11 @@ export default function ProfilePhotos() {
 
     return (
         <Box>
-
             <Box display={'flex'} justifyContent={'space-between'} mb={2}>
                 <Typography variant="h5" gutterBottom>
                     Photos
                 </Typography>
-                {isCurrentUser && (
+                {(isCurrentUser && photos.length <=4) && (
                     <Button
                         disabled={uploadPhoto.isPending}
                         color={editMode ? "error" : "primary"}
@@ -61,6 +60,7 @@ export default function ProfilePhotos() {
                             : (
                                 <ImageList sx={{ height: 450 }} cols={cols} rowHeight={164}>
                                     {photos.map((item) => {
+                                        const checkImg = item.url === profile?.imageUrl
                                         const imageUrlFormatted = item.url.replace('/upload/', '/upload/w_164,h_164,c_fit,f_auto,dpr_2/')
                                         return <ImageListItem key={item.url} sx={{ position: 'relative' }}>
                                             <img
@@ -72,10 +72,13 @@ export default function ProfilePhotos() {
                                                 style={{ border: '1px solid #ccc', borderRadius: 8 }}
                                             />
                                             {isCurrentUser && (<div>
-                                                <Box sx={{ position: 'absolute', top: 1, left: 1, backgroundColor: 'transparent' }}
-                                                    onClick={() => selectMainPhoto.mutate(item)}
+                                                <Box sx={{ position: 'absolute', top: 1, left: 1, backgroundColor: 'transparent', 
+                                                
+
+                                                }}
+                                                    onClick={() => !checkImg ? selectMainPhoto.mutate(item) : null}
                                                 >
-                                                    <StarButton selected={item.url === profile?.imageUrl} />
+                                                   <StarButton selected={checkImg} />
                                                 </Box>
                                                 {(profile?.imageUrl !== item.url) && (
                                                     <Box sx={{ position: 'absolute', top: 2, right: 1, backgroundColor: 'transparent' }}

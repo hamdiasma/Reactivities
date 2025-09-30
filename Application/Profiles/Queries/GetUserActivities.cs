@@ -11,15 +11,17 @@ namespace Application.Profiles.Queries;
 
 public class GetUserActivities
 {
-    public class Query : IRequest<Result<List<UserActivityDTO>>>
+    public class Query : IRequest<Result<PageResult<UserActivityDTO>>>
     {
         public required string UserId { get; set; }
         public required string Filter { get; set; }
+        public int PageNumber { get; set; } = 1;
+        public int PageSize { get; set; } = 12;
     }
 
-    public class Handler(AppDbContext dbContext, IMapper mapper) : IRequestHandler<Query, Result<List<UserActivityDTO>>>
+    public class Handler(AppDbContext dbContext, IMapper mapper) : IRequestHandler<Query, Result<PageResult<UserActivityDTO>>>
     {
-        public async Task<Result<List<UserActivityDTO>>> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<Result<PageResult<UserActivityDTO>>> Handle(Query request, CancellationToken cancellationToken)
         {
             var query = dbContext.ActivityAttendees
             .Where(u => u.User.Id == request.UserId)
@@ -37,10 +39,19 @@ public class GetUserActivities
             };
 
             var projectedActivities = query.ProjectTo<UserActivityDTO>(mapper.ConfigurationProvider);
-
-            var activities = await projectedActivities.ToListAsync(cancellationToken);
-
-            return Result<List<UserActivityDTO>>.Success(activities);
+            var totalCount = await projectedActivities.CountAsync(cancellationToken);
+            var activities = await projectedActivities
+                .Skip((request.PageNumber - 1) * request.PageSize)
+                .Take(request.PageSize)
+                .ToListAsync(cancellationToken);
+            var pagedResult = new PageResult<UserActivityDTO>
+            {
+                Items = activities,
+                TotalCount = totalCount,
+                PageNumber = request.PageNumber,
+                PageSize = request.PageSize
+            };
+            return Result<PageResult<UserActivityDTO>>.Success(pagedResult);
         }
     }
 }
