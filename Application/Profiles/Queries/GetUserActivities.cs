@@ -17,6 +17,9 @@ public class GetUserActivities
         public required string Filter { get; set; }
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 12;
+
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
     }
 
     public class Handler(AppDbContext dbContext, IMapper mapper) : IRequestHandler<Query, Result<PageResult<UserActivityDTO>>>
@@ -40,10 +43,13 @@ public class GetUserActivities
 
             var projectedActivities = query.ProjectTo<UserActivityDTO>(mapper.ConfigurationProvider);
             var totalCount = await projectedActivities.CountAsync(cancellationToken);
+
             var activities = await projectedActivities
-                .Skip((request.PageNumber - 1) * request.PageSize)
-                .Take(request.PageSize)
-                .ToListAsync(cancellationToken);
+                  .Skip((request.PageNumber - 1) * request.PageSize)
+                  .Take(request.PageSize)
+                  .ToListAsync(cancellationToken);
+
+
             var pagedResult = new PageResult<UserActivityDTO>
             {
                 Items = activities,

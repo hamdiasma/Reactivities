@@ -73,16 +73,27 @@ namespace API.Controllers
         }
 
         [HttpGet("{userId}/activities")]
-        public async Task<ActionResult> GetUserActivities(string userId, string filter, int pageNumber, int pageSize=12 )
+        public async Task<ActionResult> GetUserActivities(string userId, string filter,
+         int pageNumber, int pageSize = 12)
         {
             return HandleResult(await Mediator.Send(new GetUserActivities.Query
             {
                 UserId = userId,
                 Filter = filter,
                 PageNumber = pageNumber,
-                PageSize = pageSize
+                PageSize = pageSize,
             }));
         }
 
-    }
+        [HttpGet("{userId}/activities/monthly")]
+        public async Task<ActionResult> GetUserMonthlyActivities(string userId, DateTime startDate, DateTime endDate)
+        {
+            return HandleResult(await Mediator.Send(new GetUserMonthlyActivities.Query
+            {
+                UserId = userId,
+                StartDate = startDate,
+                EndDate = endDate
+            }));
+        }
+  }
 }

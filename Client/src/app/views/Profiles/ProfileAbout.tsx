@@ -10,7 +10,7 @@ import { toast } from 'react-toastify'
 
 export default function ProfileAbout() {
   const { id } = useParams()
-  const { profile, isCurrentUser, updateProfile } = useProfile(id)
+  const { profile, isCurrentUser, updateProfile } = useProfile(id,undefined, 'info')
 
   const {
     handleSubmit,

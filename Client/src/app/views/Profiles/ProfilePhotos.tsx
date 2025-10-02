@@ -8,7 +8,7 @@ import DeleteButton from "../../Shared/Components/DeleteButton"
 
 export default function ProfilePhotos() {
     const { id } = useParams()
-    const { photos, loadingPhotos, isCurrentUser, uploadPhoto, profile, selectMainPhoto, deleteProfilePhoto } = useProfile(id)
+    const { photos, loadingPhotos, isCurrentUser, uploadPhoto, profile, selectMainPhoto, deleteProfilePhoto } = useProfile(id, undefined, 'photo')
     const [editMode, setEditMode] = useState(false)
 
     const theme = useTheme()

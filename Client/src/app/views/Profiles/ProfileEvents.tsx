@@ -15,7 +15,7 @@ export default function ProfileEvents() {
 
     const { id } = useParams();
 
-    const { userActivities, setFilter, loadingUserActivities,page, setPage } = useProfile(id)
+    const { userActivities, setFilter, loadingUserActivities,page, setPage } = useProfile(id, undefined, 'filter')
 
 
     React.useEffect(() => {

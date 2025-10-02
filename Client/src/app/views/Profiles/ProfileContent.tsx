@@ -5,6 +5,7 @@ import ProfileAbout from "./ProfileAbout";
 import ProfileFollowings from "./ProfileFollowings";
 import {Predicate, type PredicateType} from '../../../lib/contantes/constants'
 import ProfileEvents from "./ProfileEvents";
+import ProfileCalendar from "./ProfileCalander";
 export default function ProfileContent() {
   const [value, setValue] = useState(0);
   const theme = useTheme();
@@ -14,6 +15,7 @@ export default function ProfileContent() {
     { label: "About", content: <ProfileAbout/> },
     { label: "Photos", content: <ProfilePhotos/> },
     { label: "Events", content: <ProfileEvents/> },
+    { label: "Calnder", content: <ProfileCalendar/> },
     { label: "Followers", content:  <ProfileFollowings key={'FOLLOWERS'} predicate={Predicate.FOLLOWERS as PredicateType}/> },
     { label: "Following", content:  <ProfileFollowings key={'FOLLOWINGS'} predicate={Predicate.FOLLOWINGS as PredicateType}/> },
   ];

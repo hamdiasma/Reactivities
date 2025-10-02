@@ -1,11 +1,18 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import agent from "../api/agent";
 import { useMemo, useState } from "react";
 import { type PredicateType } from "../contantes/constants";
 
-export const useProfile = (id?: string, predicate?:PredicateType) => {
+export const useProfile = (id?: string, predicate?: PredicateType, label?: string) => {
     const [filter, setFilter] = useState<string | null>(null);
     const [page, setPage] = useState<number>(1);
+    const [dates, setDates] = useState<{
+        startdate: Date | null,
+        endDate: Date | null,
+    }>({
+        startdate: null,
+        endDate: null
+    })
 
     const queryClient = useQueryClient();
     const { data: profile, isLoading: loadingProfile } = useQuery<IProfile>({
@@ -14,7 +21,7 @@ export const useProfile = (id?: string, predicate?:PredicateType) => {
             const response = await agent.get<IProfile>(`/Profiles/${id}`);
             return response.data;
         },
-        enabled: !!id && !predicate
+        enabled: !!id && !predicate && label === 'info'
     })
 
     const { data: photos, isLoading: loadingPhotos } = useQuery<IPhoto[]>({
@@ -23,7 +30,7 @@ export const useProfile = (id?: string, predicate?:PredicateType) => {
             const response = await agent.get<IPhoto[]>(`/Profiles/${id}/photos`);
             return response.data;
         },
-        enabled: !!id && !predicate
+        enabled: !!id && !predicate && label === 'photo'
     })
 
     const { data: followigns, isLoading: loadingFollowings } = useQuery<IProfile[]>({
@@ -35,22 +42,37 @@ export const useProfile = (id?: string, predicate?:PredicateType) => {
         enabled: !!id && !!predicate
     })
 
-
-    const {data:userActivities, isLoading:loadingUserActivities} = useQuery({
-         queryKey:['user-activities', filter, page],
-         queryFn: async ()=>{
-            const response = await agent.get<RootUserEvents>(`/profiles/${id}/activities`,{
-                params:{
+    const { data: userActivities, isLoading: loadingUserActivities } = useQuery({
+        queryKey: ['user-activities', filter, page],
+        queryFn: async () => {
+            const response = await agent.get<RootUserEvents>(`/profiles/${id}/activities`, {
+                params: {
                     filter,
-                    PageNumber:page
+                    pageNumber: page,
+
                 }
             })
             return response.data
-         },
-         enabled : !!id && !!filter
+        },
+        placeholderData: keepPreviousData,
+        enabled: !!id && !!filter && !predicate && label === "filter"
     })
 
-
+    const { data: userCalanderActivities, isLoading: loadingUserCalanderActivities } = useQuery({
+        queryKey: ['user-activities-calnader', dates.startdate],
+        queryFn: async () => {
+            if(!dates.startdate || !dates.endDate) return;
+            const response = await agent.get<IActivity[]>(`/profiles/${id}/activities/monthly`, {
+                params: {
+                    startDate:new Date( dates.startdate),
+                    endDate: new Date(dates.endDate),
+                }
+            })
+            return response.data
+        },
+        placeholderData: keepPreviousData,
+        enabled: !!id && !predicate && label === "calander"
+    })
     const uploadPhoto = useMutation({
         mutationFn: async (file: Blob) => {
             const formData = new FormData();
@@ -160,7 +182,7 @@ export const useProfile = (id?: string, predicate?:PredicateType) => {
         onSuccess: () => {
             queryClient.setQueryData(["profile", id], (profile: IProfile) => {
 
-                queryClient.invalidateQueries({queryKey:['followings', id, 'followers']})
+                queryClient.invalidateQueries({ queryKey: ['followings', id, 'followers'] })
                 if (!profile || profile.followerSCount === undefined) return profile;
                 return {
                     ...profile,
@@ -188,13 +210,17 @@ export const useProfile = (id?: string, predicate?:PredicateType) => {
         deleteProfilePhoto,
         updateProfile,
         updateFollowing,
-       followigns, 
-       loadingFollowings ,
-       userActivities,
-       loadingUserActivities,
-       setFilter,
-       filter,
-       setPage,
-       page
+        followigns,
+        loadingFollowings,
+        userActivities,
+        loadingUserActivities,
+        setFilter,
+        filter,
+        setPage,
+        page,
+        userCalanderActivities,
+        loadingUserCalanderActivities,
+        setDates,
+        dates
     }
 }
