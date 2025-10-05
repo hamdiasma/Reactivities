@@ -14,6 +14,8 @@ public class User : IdentityUser
     public ICollection<Photo> Photos { get; set; } = []; //many to many
 
     public Collection<UserFollowing> Followings { get; set; } = [];
-    public Collection<UserFollowing> Followers{ get; set; } = [];
+    public Collection<UserFollowing> Followers { get; set; } = [];
+    
+   public virtual ICollection<UserRole> UserRoles { get; set; } = [];
 
 }

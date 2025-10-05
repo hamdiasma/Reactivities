@@ -1,11 +1,14 @@
 using Domain;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Persistence.Application;
 
-public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<User, Role, string>(options)
+public class AppDbContext(DbContextOptions<AppDbContext> options) :  IdentityDbContext<User, Role, string,
+            IdentityUserClaim<string>, UserRole, IdentityUserLogin<string>,
+            IdentityRoleClaim<string>, IdentityUserToken<string>>(options)
 {
     public required virtual DbSet<Activity> Activities { get; set; }
     public required virtual DbSet<ActivityAttendee> ActivityAttendees { get; set; }
@@ -17,6 +20,24 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+
+builder.Entity<UserRole>(userRole =>
+            {
+                userRole.HasKey(ur => new { ur.UserId, ur.RoleId });
+
+                userRole.HasOne(ur => ur.User)
+                    .WithMany(u => u.UserRoles)
+                    .HasForeignKey(ur => ur.UserId)
+                    .IsRequired();
+
+                userRole.HasOne(ur => ur.Role)
+                    .WithMany(r => r.UserRoles)
+                    .HasForeignKey(ur => ur.RoleId)
+                    .IsRequired();
+            });
+
+
+
         builder.Entity<ActivityAttendee>(x => x.HasKey(a => new { a.UserId, a.ActivityId }));
         // Définition de la relation entre ActivityAttendee et User :
         // - Un ActivityAttendee est lié à un seul User (HasOne)
@@ -53,10 +74,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
      x.HasOne(o => o.Followee)
       .WithMany(f => f.Followers)           // la collection des abonnés de l’utilisateur
       .HasForeignKey(o => o.FolloweeId)     // clé étrangère pointant vers le Followee
-      .OnDelete(DeleteBehavior.Cascade);    // si le Followee est supprimé, on supprime aussi ses relations
+      .OnDelete(DeleteBehavior.NoAction);    // si le Followee est supprimé, on supprime aussi ses relations
  });
-
-
 
         var dateTimeConverter = new ValueConverter<DateTime, DateTime>(
             v => v.ToUniversalTime(),

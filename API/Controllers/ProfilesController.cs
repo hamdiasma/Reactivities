@@ -2,6 +2,7 @@ using Application.Profiles.Cammands;
 using Application.Profiles.DTOs;
 using Application.Profiles.Queries;
 using Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,20 @@ namespace API.Controllers
     [ApiController]
     public class ProfilesController : BaseApiController
     {
+        [Authorize(Roles = "SuperAdmin")]
+        [HttpGet("all")]
+        public async Task<ActionResult<Photo>> GetAllProfiles([FromQuery] string? filter,
+         int pageNumber = 1, int pageSize = 25)
+        {
+            return HandleResult(await Mediator.Send(new GetAllProfiles.Query
+            {
+                Filter = filter,
+                PageNumber =pageNumber,
+                PageSize =  pageSize
+
+            }));
+        }
+
         [HttpPost("add-photo")]
         public async Task<ActionResult<Photo>> AddPhoto([FromForm] IFormFile file)
         {
@@ -95,5 +110,5 @@ namespace API.Controllers
                 EndDate = endDate
             }));
         }
-  }
+    }
 }

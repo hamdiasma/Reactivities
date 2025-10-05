@@ -40,5 +40,8 @@ public class MappingProfiles : Profile
     .ForMember(d => d.ImageUrl, o => o.MapFrom(s => s.User.ImageUrl));
 
     CreateMap<Activity, UserActivityDTO>();
+    CreateMap<User, ProfileDTO>()
+    .ForMember(d => d.ImageUrl, o => o.MapFrom(s => s.ImageUrl))
+    .ForMember(d => d.Roles, o => o.MapFrom(s => s.UserRoles!.Select(r => r.Role.Name).ToList()));
   }
 }

@@ -4,7 +4,7 @@ namespace Domain;
 
 public class Role : IdentityRole<string>
 {
-public Role() : base()
+    public Role() : base()
     {
         Id = Guid.NewGuid().ToString(); // 👈 Obligatoire pour éviter null
     }
@@ -13,4 +13,5 @@ public Role() : base()
     {
         Id = Guid.NewGuid().ToString(); // 👈 Obligatoire
     }
+    public virtual ICollection<UserRole> UserRoles { get; set; } = [];
 }

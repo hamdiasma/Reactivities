@@ -25,6 +25,7 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import {PlaylistAddOutlined } from '@mui/icons-material';
 import PersonIcon from '@mui/icons-material/Person';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -138,9 +139,16 @@ export default function NavBar() {
                     <Typography variant='body2'>My profile</Typography>
                 </ListItemText>
             </MenuItem>
+            <MenuItem component={Link} to={`/admin`} onClick={handleMenuClose}>
+                <ListItemIcon>
+                    <AdminPanelSettingsIcon />
+                </ListItemIcon>
+                <ListItemText>
+                    <Typography variant='body2'>Admin</Typography>
+                </ListItemText>
+            </MenuItem>
             <Divider />
             <MenuItem sx={{ color: 'red' }} onClick={logOut}><PowerSettingsNewIcon fontSize='small' /> Deconnexion</MenuItem>
-
         </Menu>
     );
 

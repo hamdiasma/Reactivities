@@ -1,1 +1,4 @@
-{}
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/70c27bdf-082d-4ada-8def-535228a81154/resourceGroups/5arja-rg/providers/Microsoft.Web/sites/lemma",
+    "appService.deploySubpath": "API\\bin\\Publish"
+}

@@ -24,8 +24,8 @@ interface IActivity {
   hostImageUrl?: string
 }
 
- interface RootUserEvents {
-  items: IActivity[]
+ interface RootUserEvents<T> {
+  items: T[]
   totalCount: number
   pageNumber: number
   pageSize: number
@@ -59,12 +59,14 @@ interface IPhoto {
 
 interface IProfile {
   id: string
+  email?: string
   imageUrl?: string
   displayName: string,
   bio?: string
   following?: boolean,
   followerSCount?: number,
   FollowingSCount?: number,
+  roles?: Roles
 }
 
 

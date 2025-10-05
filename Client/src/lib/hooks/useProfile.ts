@@ -45,11 +45,10 @@ export const useProfile = (id?: string, predicate?: PredicateType, label?: strin
     const { data: userActivities, isLoading: loadingUserActivities } = useQuery({
         queryKey: ['user-activities', filter, page],
         queryFn: async () => {
-            const response = await agent.get<RootUserEvents>(`/profiles/${id}/activities`, {
+            const response = await agent.get<RootUserEvents<IActivity>>(`/profiles/${id}/activities`, {
                 params: {
                     filter,
                     pageNumber: page,
-
                 }
             })
             return response.data
@@ -61,10 +60,10 @@ export const useProfile = (id?: string, predicate?: PredicateType, label?: strin
     const { data: userCalanderActivities, isLoading: loadingUserCalanderActivities } = useQuery({
         queryKey: ['user-activities-calnader', dates.startdate],
         queryFn: async () => {
-            if(!dates.startdate || !dates.endDate) return;
+            if (!dates.startdate || !dates.endDate) return;
             const response = await agent.get<IActivity[]>(`/profiles/${id}/activities/monthly`, {
                 params: {
-                    startDate:new Date( dates.startdate),
+                    startDate: new Date(dates.startdate),
                     endDate: new Date(dates.endDate),
                 }
             })
@@ -73,6 +72,24 @@ export const useProfile = (id?: string, predicate?: PredicateType, label?: strin
         placeholderData: keepPreviousData,
         enabled: !!id && !predicate && label === "calander"
     })
+
+    const { data: profiles, isLoading: loadingProfiles } = useQuery<RootUserEvents<IProfile>>({
+        queryKey: ['profiles', filter, page],
+        queryFn: async () => {
+            const response = await agent.get<RootUserEvents<IProfile>>(`/Profiles/all`,
+                {
+                    params: {
+                        filter,
+                        pageNumber: page || 1,
+                        pageSize: 25
+                    }
+                }
+            );
+            return response.data;
+        },
+        enabled: !id && !predicate && label === "admin"
+    })
+
     const uploadPhoto = useMutation({
         mutationFn: async (file: Blob) => {
             const formData = new FormData();
@@ -199,12 +216,17 @@ export const useProfile = (id?: string, predicate?: PredicateType, label?: strin
         return id === queryClient.getQueryData<IUser>(['user'])?.id
     }, [id, queryClient])
 
+    const isAdmin = useMemo(() => {
+        return id === queryClient.getQueryData<IUser>(['user'])?.roles?.includes('Admin') || queryClient.getQueryData<IUser>(['user'])?.roles?.includes('SuperAdmin')
+    }, [id, queryClient])
+
     return {
         profile,
         loadingProfile,
         photos,
         loadingPhotos,
         isCurrentUser,
+        isAdmin,
         uploadPhoto,
         selectMainPhoto,
         deleteProfilePhoto,
@@ -221,6 +243,8 @@ export const useProfile = (id?: string, predicate?: PredicateType, label?: strin
         userCalanderActivities,
         loadingUserCalanderActivities,
         setDates,
-        dates
+        dates,
+        profiles,
+        loadingProfiles
     }
 }
